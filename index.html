@@ -131,6 +131,21 @@ ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
 
 <p>在OpenShare使用过程中有任何问题，都可以<a href="https://github.com/100apps/openshare/issues">添加一个issues</a>，我会及时解决。如果您想贡献代码，欢迎<a href="https://github.com/100apps/openshare/pulls">Pull Requests</a>。其他任何问题可以在下面留言，或者通过邮箱<a href="mailto:gf@gfzj.us">gf@gfzj.us</a>联系我。</p>
 
+
+<script type="text/javascript">
+(function(){
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=auto&border=1&brandline=y&appkey=3767475828&dpc=1";
+url = url.replace("url=auto", "url=" + encodeURIComponent(document.URL)); 
+document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
+})();
+</script>
+<script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+window.WBComment.init({
+    "id": "WBCommentFrame"
+});
+</script>
+
     </section>
 
     <aside id="sidebar">
@@ -149,6 +164,8 @@ ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
     </aside>
   </div>
 </div>
+
+
 
 <script>
 function $(id){return document.getElementById(id)}
