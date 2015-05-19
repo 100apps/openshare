@@ -49,34 +49,34 @@
 
             <p>这样对应OSMessage中的属性：</p>
             <pre><code>@property NSString* title;
-              @property NSString* desc;
-              @property NSString* link;
-              @property NSData* image;
-              @property NSData* thumbnail;
-              @property OSMultimediaType multimediaType;
-              //for 微信
-              @property NSString* extInfo;
-              @property NSString* mediaDataUrl;
-              @property NSString* fileExt;
+@property NSString* desc;
+@property NSString* link;
+@property NSData* image;
+@property NSData* thumbnail;
+@property OSMultimediaType multimediaType;
+//for 微信
+@property NSString* extInfo;
+@property NSString* mediaDataUrl;
+@property NSString* fileExt;
             </code></pre>
             <p>比如一个文本消息，可以只设置<code>title</code>，其他不管；发送一个图片，只需要设置image/thumbnail/title/desc，其他不用设置。对于其他多媒体消息，可以用<code>multimediaType</code>来标示。所以<code>OSMessage</code>可以封装所有app向客户端发的各类分享请求。</p>
 
             <p>另外，还需要解决的是，客户端分先完成以后回调app的功能。我们熟悉的是block方法。而不是每个平台都到<code>application:openURL:sourceApplication:annotation:</code>中判断。比如最好是这样的：</p>
 
             <pre><code>OSMessage *msg=[[OSMessage alloc] init];
-              msg.title=@"Hello World";
-              //分享到微信
-              [OpenShare shareToWeixinSession:msg Success:^(OSMessage *message) {
-              ULog(@"微信分享到会话成功：\n%@",message);
-            } Fail:^(OSMessage *message, NSError *error) {
-            ULog(@"微信分享到会话失败：\n%@\n%@",error,message);
-          }];
-          //分享到QQ
-          [OpenShare shareToQQFriends:msg Success:^(OSMessage *message) {
-          ULog(@"分享到QQ好友成功:%@",msg);
-        } Fail:^(OSMessage *message, NSError *error) {
-        ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
-      }];
+msg.title=@"Hello World";
+//分享到微信
+[OpenShare shareToWeixinSession:msg Success:^(OSMessage *message) {
+ULog(@"微信分享到会话成功：\n%@",message);
+} Fail:^(OSMessage *message, NSError *error) {
+ULog(@"微信分享到会话失败：\n%@\n%@",error,message);
+}];
+//分享到QQ
+[OpenShare shareToQQFriends:msg Success:^(OSMessage *message) {
+ULog(@"分享到QQ好友成功:%@",msg);
+} Fail:^(OSMessage *message, NSError *error) {
+ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
+}];
     </code></pre>
     <p>基于以上考虑，楼主用category实现了OpenShare。</p>
 
@@ -85,10 +85,10 @@
 
       <p><strong>第一步：</strong>到<code>AppDelegate</code>中的<code>application:didFinishLaunchingWithOptions:</code>中全局注册appId/appKey</p>
       <pre><code>//全局注册appId，别忘了#import "OpenShareHeader.h"
-        [OpenShare connectQQWithAppId:@"1103194207"];
-        [OpenShare connectWeiboWithAppKey:@"402180334"];
-        [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
-        [OpenShare connecRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
+[OpenShare connectQQWithAppId:@"1103194207"];
+[OpenShare connectWeiboWithAppKey:@"402180334"];
+[OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
+[OpenShare connecRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
       </code></pre>
 
       <p><strong>第二步：</strong>到<code>AppDelegate</code>中的<code>application:openURL:sourceApplication:annotation:</code>中添加整体回调：</p>
@@ -100,16 +100,16 @@
 
     <p><strong>第三步：</strong>在需要分享、OAuth的地方调用：</p>
     <pre><code>//比如微信登录，其他登录可以参考文档或者代码，或者让Xcode自动提示。
-      [OpenShare WeixinAuth:@"snsapi_userinfo" Success:^(NSDictionary *message) {
-      ULog(@"微信登录成功:\n%@",message);
-    } Fail:^(NSDictionary *message, NSError *error) {
-    ULog(@"微信登录失败:\n%@\n%@",message,error);
-  }];
-  //分享纯文本消息到微信朋友圈，其他类型可以参考示例代码
-  OSMessage *msg=[[OSMessage alloc]init];
-  msg.title=@"Hello msg.title";
-  [OpenShare shareToWeixinTimeline:msg Success:^(OSMessage *message) {
-  ULog(@"微信分享到朋友圈成功：\n%@",message);
+[OpenShare WeixinAuth:@"snsapi_userinfo" Success:^(NSDictionary *message) {
+ULog(@"微信登录成功:\n%@",message);
+} Fail:^(NSDictionary *message, NSError *error) {
+ULog(@"微信登录失败:\n%@\n%@",message,error);
+}];
+//分享纯文本消息到微信朋友圈，其他类型可以参考示例代码
+OSMessage *msg=[[OSMessage alloc]init];
+msg.title=@"Hello msg.title";
+[OpenShare shareToWeixinTimeline:msg Success:^(OSMessage *message) {
+ULog(@"微信分享到朋友圈成功：\n%@",message);
 } Fail:^(OSMessage *message, NSError *error) {
 ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
 }];
