@@ -1,7 +1,6 @@
 ##Welcome to OpenShare.
 
 ![OpenShare Logo](https://github.com/100apps/openshare/raw/gh-pages/images/slogo.png)
-![OpenShare Demo](https://github.com/100apps/openshare/raw/gh-pages/images/demo.gif)
 
 注: 为方便书写，如无特殊说明，下文中的「*客户端*」指的是QQ、微信、微博这样的社交软件官方开发的客户端；「*app*」特指我们自己开发的应用。
 
@@ -57,6 +56,13 @@ msg.title=@"Hello World";
 ```
 
 基于以上考虑，楼主用category实现了OpenShare。
+
+##Demo
+
+把项目clone下来以后，直接`open OpenShareDemo/openshare.xcodeproj`就可以运行了。注意sina微博的key没有通过sina的审核，直接分享会提示错误，可以替换成自己的key。
+
+![OpenShare Demo](https://github.com/100apps/openshare/raw/gh-pages/images/demo.gif)
+
 
 ##如何使用
 
