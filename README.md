@@ -59,6 +59,35 @@ msg.title=@"Hello World";
 
 ##如何使用
 
+*第零步*: 修改`Info.plist`添加`URLSchemes`，让客户端可以回调app
+
+```xml
+<!--  OpenShare添加回调urlschemes  -->
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>OpenShare</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <!--      微信          -->
+            <string>wxd930ea5d5a258f4f</string>
+            <!--       QQ         -->
+            <string>tencent1103194207</string>
+            <string>tencent1103194207.content</string>
+            <string>QQ41C1685F</string>
+            <!--微博-->
+            <string>wb402180334</string>
+            <!--人人-->
+            <string>renrenshare228525</string>
+            <!--facebook-->
+            <string>fb776442542471056</string>
+
+        </array>
+    </dict>
+</array>
+```
+
 *第一步*：到`AppDelegate`中的`application:didFinishLaunchingWithOptions:`中全局注册appId/appKey
 
 ```objc
