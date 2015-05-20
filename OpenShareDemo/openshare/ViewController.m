@@ -94,7 +94,7 @@
         [panel addSubview:view];
     }
     
-    [UIView animateWithDuration:2 delay:0.5 usingSpringWithDamping:YES initialSpringVelocity:20 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:YES initialSpringVelocity:20 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         for (int i=1; i<=icons.count; i++) {
             [self.view viewWithTag:i].frame=CGRectMake(fromX+(i-1)*(buttonWidth+10), MARGIN_TOP+10, buttonWidth, buttonWidth);
         }

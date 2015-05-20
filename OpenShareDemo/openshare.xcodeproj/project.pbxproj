@@ -23,6 +23,7 @@
 		B66BF3F01B0C16290082F8D6 /* OpenShare+Weixin.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3E91B0C16290082F8D6 /* OpenShare+Weixin.m */; };
 		B66BF3F11B0C16290082F8D6 /* OpenShare.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3EB1B0C16290082F8D6 /* OpenShare.m */; };
 		B66BF3F41B0C1AEB0082F8D6 /* UIControl+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3F31B0C1AEB0082F8D6 /* UIControl+Blocks.m */; };
+		B66BF3F81B0C23670082F8D6 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66BF3F71B0C23670082F8D6 /* Default@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		B66BF3EC1B0C16290082F8D6 /* OpenShareHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenShareHeader.h; sourceTree = "<group>"; };
 		B66BF3F21B0C1AEB0082F8D6 /* UIControl+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl+Blocks.h"; sourceTree = "<group>"; };
 		B66BF3F31B0C1AEB0082F8D6 /* UIControl+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl+Blocks.m"; sourceTree = "<group>"; };
+		B66BF3F71B0C23670082F8D6 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 		B66BF3D61B0C143D0082F8D6 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				B66BF3F71B0C23670082F8D6 /* Default@2x.png */,
 				B66BF3D71B0C14480082F8D6 /* iconfont.ttf */,
 				B66BF3D81B0C14480082F8D6 /* logo.gif */,
 				B66BF3D91B0C14480082F8D6 /* logo.png */,
@@ -262,6 +265,7 @@
 				B66BF3DC1B0C14480082F8D6 /* logo.gif in Resources */,
 				B66BF3C11B0C137E0082F8D6 /* LaunchScreen.xib in Resources */,
 				B66BF3BE1B0C137E0082F8D6 /* Images.xcassets in Resources */,
+				B66BF3F81B0C23670082F8D6 /* Default@2x.png in Resources */,
 				B66BF3DE1B0C14480082F8D6 /* test.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
