@@ -1,6 +1,7 @@
 ##Welcome to OpenShare.
 
 ![OpenShare Logo](https://github.com/100apps/openshare/raw/gh-pages/images/slogo.png)
+![OpenShare Demo](https://github.com/100apps/openshare/raw/gh-pages/images/demo.gif)
 
 注: 为方便书写，如无特殊说明，下文中的「*客户端*」指的是QQ、微信、微博这样的社交软件官方开发的客户端；「*app*」特指我们自己开发的应用。
 
