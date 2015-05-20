@@ -43,15 +43,15 @@ OSMessage *msg=[[OSMessage alloc] init];
 msg.title=@"Hello World";
 //分享到微信
 [OpenShare shareToWeixinSession:msg Success:^(OSMessage *message) {
-ULog(@"微信分享到会话成功：\n%@",message);
+	ULog(@"微信分享到会话成功：\n%@",message);
 } Fail:^(OSMessage *message, NSError *error) {
-ULog(@"微信分享到会话失败：\n%@\n%@",error,message);
+	ULog(@"微信分享到会话失败：\n%@\n%@",error,message);
 }];
 //分享到QQ
 [OpenShare shareToQQFriends:msg Success:^(OSMessage *message) {
-ULog(@"分享到QQ好友成功:%@",msg);
+	ULog(@"分享到QQ好友成功:%@",msg);
 } Fail:^(OSMessage *message, NSError *error) {
-ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
+	ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
 }];
 ```
 
@@ -73,9 +73,9 @@ ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
 
 ```objc
 //如果OpenShare能处理这个回调，就调用block中的方法，如果不能处理，就交给其他（比如支付宝）。
-        if ([OpenShare handleOpenURL:url]) {
-        return YES;
-      }
+if ([OpenShare handleOpenURL:url]) {
+	return YES;
+}
 ```   
 
 *第三步*：在需要分享、OAuth的地方调用：
@@ -83,17 +83,17 @@ ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
 ```objc
 //比如微信登录，其他登录可以参考文档或者代码，或者让Xcode自动提示。
 [OpenShare WeixinAuth:@"snsapi_userinfo" Success:^(NSDictionary *message) {
-ULog(@"微信登录成功:\n%@",message);
+	ULog(@"微信登录成功:\n%@",message);
 } Fail:^(NSDictionary *message, NSError *error) {
-ULog(@"微信登录失败:\n%@\n%@",message,error);
+	ULog(@"微信登录失败:\n%@\n%@",message,error);
 }];
 //分享纯文本消息到微信朋友圈，其他类型可以参考示例代码
 OSMessage *msg=[[OSMessage alloc]init];
 msg.title=@"Hello msg.title";
 [OpenShare shareToWeixinTimeline:msg Success:^(OSMessage *message) {
-ULog(@"微信分享到朋友圈成功：\n%@",message);
+	ULog(@"微信分享到朋友圈成功：\n%@",message);
 } Fail:^(OSMessage *message, NSError *error) {
-ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
+	ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
 }];
 ```
 
