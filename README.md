@@ -71,6 +71,12 @@ msg.title=@"Hello World";
 
 ##如何使用
 
+OpenShare已经支持CocoaPods。所以您可以用:
+
+	pod 'OpenShare', '~> 0.0'
+
+引入OpenShare。
+
 *第零步*: 修改`Info.plist`添加`URLSchemes`，让客户端可以回调app
 
 ```xml
