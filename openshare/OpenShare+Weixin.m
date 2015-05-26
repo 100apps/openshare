@@ -124,8 +124,7 @@ static NSString *schema=@"Weixin";
     NSURL* url=[self returnedURL];
     if ([url.scheme hasPrefix:@"wx"]) {
         NSDictionary *retDic=[NSPropertyListSerialization propertyListWithData:[[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"] options:0 format:0 error:nil][[self keyFor:schema][@"appid"]];
-        NSLog(@"retDic\n%@",retDic);
-        if ([url.absoluteString containsString:@"://oauth"]) {
+        if ([url.absoluteString rangeOfString:@"://oauth"].location!=NSNotFound) {
             //login succcess
             if ([self authSuccesCallback]) {
                 [self authSuccesCallback]([self parseUrl:url]);
