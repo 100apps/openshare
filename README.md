@@ -41,7 +41,7 @@ OpenShare非常小，目前支持QQ、微信、微博、人人，只有几百行
 
 比如一个文本消息，可以只设置title，其他不管；发送一个图片，只需要设置image/thumbnail/title/desc，其他不用设置。对于其他多媒体消息，可以用multimediaType来标示。所以OSMessage可以封装所有app向客户端发的各类分享请求。
 
-另外，还需要解决的是，客户端分先完成以后回调app的功能。我们熟悉的是block方法。而不是每个平台都到application:openURL:sourceApplication:annotation:中判断。比如最好是这样的：
+另外，还需要解决的是，客户端分享完成以后回调app的功能。我们熟悉的是block方法。而不是每个平台都到application:openURL:sourceApplication:annotation:中判断。比如最好是这样的：
 
 ```objc
 OSMessage *msg=[[OSMessage alloc] init];
