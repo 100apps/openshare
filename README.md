@@ -2,6 +2,7 @@
 
 ![OpenShare Logo](https://github.com/100apps/openshare/raw/gh-pages/images/slogo.png)
 
+[![Travis](https://img.shields.io/travis/100apps/openshare.svg)](https://github.com/100apps/openshare)
 [![CocoaPods Version](https://img.shields.io/cocoapods/v/OpenShare.svg?style=flat)][cocoadocs]
 [![License](https://img.shields.io/cocoapods/l/OpenShare.svg?style=flat)][cocoadocs]
 [![Platform](https://img.shields.io/cocoapods/p/OpenShare.svg?style=flat)][cocoadocs]
