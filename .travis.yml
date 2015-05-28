@@ -1,0 +1,5 @@
+language: objective-c
+before_script:
+    - brew update && brew upgrade xctool
+script:
+    - xctool test -project OpenShareDemo/openshare.xcodeproj -scheme openshare -sdk iphonesimulator
