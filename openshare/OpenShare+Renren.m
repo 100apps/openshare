@@ -10,7 +10,7 @@
 
 @implementation OpenShare (Renren)
 static NSString* schema=@"Renren";
-+(void)connecRenrenWithAppId:(NSString *)appId AndAppKey:(NSString*)appKey{
++(void)connectRenrenWithAppId:(NSString *)appId AndAppKey:(NSString*)appKey{
     [self set:schema Keys:@{@"appid":appId,@"appkey":appKey}];
 }
 +(BOOL)isRenrenInstalled{

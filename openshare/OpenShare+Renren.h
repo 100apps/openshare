@@ -9,7 +9,7 @@
 #import "OpenShare.h"
 
 @interface OpenShare (Renren)
-+(void)connecRenrenWithAppId:(NSString *)appId AndAppKey:(NSString*)appKey;
++(void)connectRenrenWithAppId:(NSString *)appId AndAppKey:(NSString*)appKey;
 +(BOOL)isRenrenInstalled;
 
 +(void)shareToRenrenSession:(OSMessage*)msg Success:(shareSuccess)success Fail:(shareFail)fail;
