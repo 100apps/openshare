@@ -72,8 +72,8 @@ static NSString* schema=@"Renren";
 +(BOOL)Renren_handleOpenURL{
     NSURL* url=[self returnedURL];
     if ([url.scheme hasPrefix:@"renrenshare"]) {
-        if ([self shareSuccesCallback]) {
-            [self shareSuccesCallback]([self message]);
+        if ([self shareSuccessCallback]) {
+            [self shareSuccessCallback]([self message]);
         }
         return YES;
     }else{

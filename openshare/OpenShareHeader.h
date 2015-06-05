@@ -12,4 +12,5 @@
 #import "OpenShare+Weibo.h"
 #import "OpenShare+Weixin.h"
 #import "OpenShare+Renren.h"
+#import "OpenShare+Alipay.h"
 #endif

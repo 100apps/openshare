@@ -47,6 +47,8 @@
             <string>OpenShare</string>
             <key>CFBundleURLSchemes</key>
             <array>
+<!--      OpenShare自己（支付宝等回调需要）         -->
+<string>openshare</string>
 <!--      微信          -->
 <string>wxd930ea5d5a258f4f</string>
 <!--       QQ         -->

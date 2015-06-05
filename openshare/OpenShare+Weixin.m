@@ -118,16 +118,39 @@ static NSString *schema=@"Weixin";
         [self openURL:[NSString stringWithFormat:@"weixin://app/%@/auth/?scope=%@&state=Weixinauth",[self keyFor:schema][@"appid"],scope]];
     }
 }
-
+/**
+ *  微信支付,不同于分享和登录，由于参数是服务器生成的，所以不需要connect。
+ *
+ *  @param link    服务器返回的link，以供直接打开
+ *  @param success 微信支付成功的回调
+ *  @param fail    微信支付失败的回调
+ */
++(void)WeixinPay:(NSString*)link Success:(paySuccess)success Fail:(payFail)fail{
+    [self setPaySuccessCallback:success];
+    [self setPayFailCallback:fail];
+    [self openURL:link];
+}
 
 +(BOOL)Weixin_handleOpenURL{
     NSURL* url=[self returnedURL];
     if ([url.scheme hasPrefix:@"wx"]) {
-        NSDictionary *retDic=[NSPropertyListSerialization propertyListWithData:[[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"] options:0 format:0 error:nil][[self keyFor:schema][@"appid"]];
-        if ([url.absoluteString rangeOfString:@"://oauth"].location!=NSNotFound) {
+        NSDictionary *retDic=[NSPropertyListSerialization propertyListWithData:[[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"]?:[[NSData alloc] init] options:0 format:0 error:nil][[self keyFor:schema][@"appid"]];
+        NSLog(@"retDic\n%@",retDic);
+        if ([url.absoluteString containsString:@"://oauth"]) {
             //login succcess
-            if ([self authSuccesCallback]) {
-                [self authSuccesCallback]([self parseUrl:url]);
+            if ([self authSuccessCallback]) {
+                [self authSuccessCallback]([self parseUrl:url]);
+            }
+        }else if([url.absoluteString containsString:@"://pay/"]){
+            NSDictionary *urlMap=[self parseUrl:url];
+            if ([urlMap[@"ret"] intValue]==0) {
+                if ([self paySuccessCallback]) {
+                    [self paySuccessCallback](urlMap);
+                }
+            }else{
+                if ([self payFailCallback]) {
+                    [self payFailCallback](urlMap,[NSError errorWithDomain:@"weixin_pay" code:[urlMap[@"ret"] intValue] userInfo:retDic]);
+                }
             }
         }else{
             if (retDic[@"state"]&&[retDic[@"state"] isEqualToString:@"Weixinauth"]&&[retDic[@"result"] intValue]!=0) {
@@ -137,8 +160,8 @@ static NSString *schema=@"Weixin";
                 }
             }else if([retDic[@"result"] intValue]==0){
                 //分享成功
-                if ([self shareSuccesCallback]) {
-                    [self shareSuccesCallback]([self message]);
+                if ([self shareSuccessCallback]) {
+                    [self shareSuccessCallback]([self message]);
                 }
             }else{
                 //分享失败

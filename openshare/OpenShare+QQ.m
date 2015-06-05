@@ -130,8 +130,8 @@ enum
                 [self shareFailCallback]([self message],err);
             }
         }else{
-            if ([self shareSuccesCallback]) {
-                [self shareSuccesCallback]([self message]);
+            if ([self shareSuccessCallback]) {
+                [self shareSuccessCallback]([self message]);
             }
         }
         return YES;
@@ -139,8 +139,8 @@ enum
         //登陆auth
         NSDictionary *ret=[self generalPasteboardData:[@"com.tencent.tencent" stringByAppendingString:[self keyFor:schema][@"appid"]] encoding:OSPboardEncodingKeyedArchiver];
         if (ret[@"ret"]&&[ret[@"ret"] intValue]==0) {
-            if ( [self authSuccesCallback]) {
-                [self authSuccesCallback](ret);
+            if ( [self authSuccessCallback]) {
+                [self authSuccessCallback](ret);
             }
         }else{
             NSError *err=[NSError errorWithDomain:@"auth_from_QQ" code:-1 userInfo:ret];

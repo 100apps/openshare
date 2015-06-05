@@ -49,6 +49,8 @@ typedef void (^shareSuccess)(OSMessage * message);
 typedef void (^shareFail)(OSMessage * message,NSError *error);
 typedef void (^authSuccess)(NSDictionary * message);
 typedef void (^authFail)(NSDictionary * message,NSError *error);
+typedef void (^paySuccess)(NSDictionary * message);
+typedef void (^payFail)(NSDictionary * message,NSError *error);
 /**
  粘贴板数据编码方式，目前只有两种:
  1. [NSKeyedArchiver archivedDataWithRootObject:data];
@@ -91,11 +93,11 @@ typedef enum : NSUInteger {
  *  @return 如果能处理，就返回YES。够则返回NO
  */
 +(BOOL)handleOpenURL:(NSURL*)url;
-+(shareSuccess)shareSuccesCallback;
++(shareSuccess)shareSuccessCallback;
 
 +(shareFail)shareFailCallback;
 
-+(void)setShareSuccesCallback:(shareSuccess)suc;
++(void)setShareSuccessCallback:(shareSuccess)suc;
 
 +(void)setShareFailCallback:(shareFail)fail;
 
@@ -122,9 +124,18 @@ typedef enum : NSUInteger {
 +(void)setGeneralPasteboard:(NSString*)key Value:(NSDictionary*)value encoding:(OSPboardEncoding)encoding;
 +(NSDictionary*)generalPasteboardData:(NSString*)key encoding:(OSPboardEncoding)encoding;
 +(NSString*)base64AndUrlEncode:(NSString *)string;
++(NSString*)urlDecode:(NSString*)input;
++ (UIImage *)screenshot;
 
-+(authSuccess)authSuccesCallback;
++(authSuccess)authSuccessCallback;
 +(authFail)authFailCallback;
+
++(void)setPaySuccessCallback:(paySuccess)suc;
+
++(void)setPayFailCallback:(payFail)fail;
+
++(paySuccess)paySuccessCallback;
++(payFail)payFailCallback;
 
 @end
 

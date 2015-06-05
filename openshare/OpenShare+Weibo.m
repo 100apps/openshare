@@ -110,8 +110,8 @@ static NSString *schema=@"Weibo";
         if ([transferObject[@"__class"] isEqualToString:@"WBAuthorizeResponse"]) {
             //auth
             if ([transferObject[@"statusCode"] intValue]==0) {
-                if ([self authSuccesCallback]) {
-                    [self authSuccesCallback](transferObject);
+                if ([self authSuccessCallback]) {
+                    [self authSuccessCallback](transferObject);
                 }
             }else{
                 if ([self authFailCallback]) {
@@ -122,8 +122,8 @@ static NSString *schema=@"Weibo";
         }else if ([transferObject[@"__class"] isEqualToString:@"WBSendMessageToWeiboResponse"]) {
             //分享回调
             if ([transferObject[@"statusCode"] intValue]==0) {
-                if ([self shareSuccesCallback]) {
-                    [self shareSuccesCallback]([self message]);
+                if ([self shareSuccessCallback]) {
+                    [self shareSuccessCallback]([self message]);
                 }
             }else{
                 if ([self shareFailCallback]) {

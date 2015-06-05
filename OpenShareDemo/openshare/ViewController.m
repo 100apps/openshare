@@ -31,12 +31,16 @@
     UIColor *blue=UIColorFromRGB(0x4799dd);
     //    UIColor *red=UIColorFromRGB(0xe3372b);
     
-    //按钮图标。 curl http://at.alicdn.com/t/font_1431516432_083878.css|pcregrep --om-separator='\":@\"\\U0000' -o1 -o2 '.icon-(.*?):before { content: "\\(.*?)"' |while read line;do echo "@\"${line}\",";done|sed 's/-/_/g'
+    //按钮图标。 curl http://at.alicdn.com/t/font_1433466220_572933.css|pcregrep --om-separator='\":@\"\\U0000' -o1 -o2 '.icon-(.*?):before { content: "\\(.*?)"' |while read line;do echo "@\"${line}\",";done|sed 's/-/_/g'
     
     icons=@{@"weibo":@"\U0000e600",
             @"weixin":@"\U0000e601",
             @"qq":@"\U0000e602",
-            @"renren":@"\U0000e603",};
+            @"renren":@"\U0000e603",
+            @"alipay":@"\U0000e605",
+            //            @"facebook":@"\U0000e606",
+            //            @"twitter":@"\U0000e604"
+            };
     
     self.navigationItem.title=@"OpenShare 测试";
     self.view.backgroundColor=[UIColor whiteColor];
@@ -49,7 +53,7 @@
     if (fromX<0) {
         fromX=0;
     }
-    for (NSString *icon in @[@"weibo",@"qq",@"weixin",@"renren"]/*对dictionary进行for-in，不能保证顺序*/) {
+    for (NSString *icon in @[@"weibo",@"qq",@"weixin",@"renren",@"alipay"]/*对dictionary进行for-in，不能保证顺序*/) {
         UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
         btn.layer.cornerRadius=buttonWidth/2;
         btn.clipsToBounds=YES;
@@ -86,7 +90,7 @@
     
     //测试分享的view
     CGRect frame=CGRectMake(0, 10, SCREEN_WIDTH-fromX*2, panel.frame.size.height);
-    NSArray *views=@[[UIView new],[self sinaWeiboView:frame],[self qqView:frame],[self weixinView:frame],[self renrenView:frame]];
+    NSArray *views=@[[UIView new],[self sinaWeiboView:frame],[self qqView:frame],[self weixinView:frame],[self renrenView:frame],[self alipayView:frame]];
     for (int i=1; i<=icons.count; i++) {
         UIView *view=views[i];
         view.tag=100+i;
@@ -94,7 +98,7 @@
         [panel addSubview:view];
     }
     
-    [UIView animateWithDuration:1 delay:0 usingSpringWithDamping:YES initialSpringVelocity:20 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:2 delay:0.5 usingSpringWithDamping:YES initialSpringVelocity:20 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         for (int i=1; i<=icons.count; i++) {
             [self.view viewWithTag:i].frame=CGRectMake(fromX+(i-1)*(buttonWidth+10), MARGIN_TOP+10, buttonWidth, buttonWidth);
         }
@@ -110,6 +114,34 @@
     btn.center=center;
     return btn;
 }
+#pragma mark 支付宝测试
+-(UIView*)alipayView:(CGRect)frame{
+    UIView *view=[[UIView alloc]initWithFrame:frame];
+    UIButton *alipay=[self button:@"支付宝支付" WithCenter:CGPointMake(frame.size.width/2, 40)];
+    [view addSubview:alipay];
+    [alipay addEventHandler:^(UIButton* sender) {
+        NSString *apiUrl=@"https://pay.example.com/pay.php?payType=alipay";
+        if ([apiUrl hasPrefix:@"https://pay.example.com"]) {
+            ULog(@"请部署pay.php，填写自家的key。否则无法测试。");
+        }else{
+            //网络请求不要阻塞UI，仅限Demo
+            NSData *data=[NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:apiUrl]] returningResponse:nil error:nil];
+            
+            NSString *link=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+            NSLog(@"link:%@",link);
+            [OpenShare AliPay:link Success:^(NSDictionary *message) {
+                ULog(@"支付宝支付成功:\n%@",message);
+            } Fail:^(NSDictionary *message, NSError *error) {
+                ULog(@"支付宝支付失败:\n%@\n%@",message,error);
+            }];
+        }
+        
+    } forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    return view;
+}
+
 #pragma mark 新浪微博测试
 -(UIView*)sinaWeiboView:(CGRect)frame{
     UIView *ret=[[UIView alloc] initWithFrame:frame];
@@ -298,10 +330,17 @@
     
     UIView *loginView=[[UIView alloc]initWithFrame:CGRectMake(0, calcYFrom(seg)+30, frame.size.width, frame.size.height)];
     loginView.backgroundColor=[UIColor whiteColor];
-    UIButton *loginBtn=[self button:@"登录(appid需要通过认证)" WithCenter:CGPointMake(loginView.frame.size.width/2,0)];
+    UIButton *loginBtn=[self button:@"登录(appid需要通过认证,300/年)" WithCenter:CGPointMake(loginView.frame.size.width/2,0)];
     loginBtn.tag=30000;
     [loginView addSubview:loginBtn];
     [loginBtn addTarget:self action:@selector(weixinViewHandler:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *payBtn=[self button:@"微信支付（需要在pay.php中设置支付参数）" WithCenter:CGPointMake(loginView.frame.size.width/2,40)];
+    payBtn.tag=40001;
+    [loginView addSubview:payBtn];
+    [payBtn addTarget:self action:@selector(weixinViewHandler:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
     [ret addSubview:loginView];
     [seg addEventHandler:^(UISegmentedControl *seg) {
         loginView.hidden=seg.selectedSegmentIndex!=0;
@@ -318,6 +357,21 @@
         } Fail:^(NSDictionary *message, NSError *error) {
             ULog(@"微信登录失败:\n%@\n%@",message,error);
         }];
+    }else if(btn.tag==40001){
+        NSString *apiUrl=@"https://pay.example.com/pay.php?payType=weixin";
+        if ([apiUrl hasPrefix:@"https://pay.example.com"]) {
+            ULog(@"请部署pay.php，填写自家的key。");
+        }else{
+            //网络请求不要阻塞UI，仅限Demo
+            NSData *data=[NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:apiUrl]] returningResponse:nil error:nil];
+            NSString *link=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+            [OpenShare WeixinPay:link Success:^(NSDictionary *message) {
+                ULog(@"微信支付成功:\n%@",message);
+            } Fail:^(NSDictionary *message, NSError *error) {
+                ULog(@"微信支付失败:\n%@\n%@",message,error);
+            }];
+        }
+        
     }
     if (btn.tag>30001) {
         msg.desc=@"这里是msg.desc";

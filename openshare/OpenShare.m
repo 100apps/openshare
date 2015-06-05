@@ -55,24 +55,39 @@ static NSMutableDictionary *keys;
 #pragma mark 分享／auth以后，应用被调起，回调。
 static NSURL* returnedURL;
 static NSDictionary *returnedData; 
-static shareSuccess shareSuccesCallback;
+static shareSuccess shareSuccessCallback;
 static shareFail shareFailCallback;
 
-static authSuccess authSuccesCallback;
+static authSuccess authSuccessCallback;
 static authFail authFailCallback;
 
+static paySuccess paySuccessCallback;
+static payFail payFailCallback;
+
 static OSMessage *message;
-+(shareSuccess)shareSuccesCallback{
-    return shareSuccesCallback;
++(shareSuccess)shareSuccessCallback{
+    return shareSuccessCallback;
 }
 +(shareFail)shareFailCallback{
     return shareFailCallback;
 }
-+(void)setShareSuccesCallback:(shareSuccess)suc{
-    shareSuccesCallback=suc;
++(void)setShareSuccessCallback:(shareSuccess)suc{
+    shareSuccessCallback=suc;
 }
 +(void)setShareFailCallback:(shareFail)fail{
     shareFailCallback=fail;
+}
++(void)setPaySuccessCallback:(paySuccess)suc{
+    paySuccessCallback=suc;
+}
++(void)setPayFailCallback:(payFail)fail{
+    payFailCallback=fail;
+}
++(paySuccess)paySuccessCallback{
+    return paySuccessCallback;
+}
++(payFail)payFailCallback{
+    return payFailCallback;
 }
 +(NSURL*)returnedURL{
     return returnedURL;
@@ -89,8 +104,8 @@ static OSMessage *message;
 +(OSMessage*)message{
     return message?:[[OSMessage alloc] init];
 }
-+(authSuccess)authSuccesCallback{
-    return authSuccesCallback;
++(authSuccess)authSuccessCallback{
+    return authSuccessCallback;
 }
 +(authFail)authFailCallback{
     return authFailCallback;
@@ -98,7 +113,7 @@ static OSMessage *message;
 +(BOOL)beginShare:(NSString*)platform Message:(OSMessage*)msg Success:(shareSuccess)success Fail:(shareFail)fail{
     if ([self keyFor:platform]) {
         message=msg;
-        shareSuccesCallback=success;
+        shareSuccessCallback=success;
         shareFailCallback=fail;
         return YES;
     }else{
@@ -108,7 +123,7 @@ static OSMessage *message;
 }
 +(BOOL)beginAuth:(NSString*)platform Success:(authSuccess)success Fail:(authFail)fail{
     if ([self keyFor:platform]) {
-        authSuccesCallback=success;
+        authSuccessCallback=success;
         authFailCallback=fail;
         return YES;
     }else{
@@ -184,6 +199,54 @@ static OSMessage *message;
 }
 +(NSString*)base64AndUrlEncode:(NSString *)string{
     return  [[self base64Encode:string] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+}
++(NSString*)urlDecode:(NSString*)input{
+   return [[input stringByReplacingOccurrencesOfString:@"+" withString:@" "]stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
+/**
+ *  截屏功能。via：http://stackoverflow.com/a/8017292/3825920
+ *
+ *  @return 对当前窗口截屏。（支付宝可能需要）
+ */
++ (UIImage *)screenshot
+{
+    CGSize imageSize = CGSizeZero;
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
+        imageSize = [UIScreen mainScreen].bounds.size;
+    } else {
+        imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, window.center.x, window.center.y);
+        CGContextConcatCTM(context, window.transform);
+        CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
+        if (orientation == UIInterfaceOrientationLandscapeLeft) {
+            CGContextRotateCTM(context, M_PI_2);
+            CGContextTranslateCTM(context, 0, -imageSize.width);
+        } else if (orientation == UIInterfaceOrientationLandscapeRight) {
+            CGContextRotateCTM(context, -M_PI_2);
+            CGContextTranslateCTM(context, -imageSize.height, 0);
+        } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            CGContextRotateCTM(context, M_PI);
+            CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
+        }
+        if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
+        } else {
+            [window.layer renderInContext:context];
+        }
+        CGContextRestoreGState(context);
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 @end
 

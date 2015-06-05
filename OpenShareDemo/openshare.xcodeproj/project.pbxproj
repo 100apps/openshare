@@ -24,6 +24,7 @@
 		B66BF3F11B0C16290082F8D6 /* OpenShare.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3EB1B0C16290082F8D6 /* OpenShare.m */; };
 		B66BF3F41B0C1AEB0082F8D6 /* UIControl+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3F31B0C1AEB0082F8D6 /* UIControl+Blocks.m */; };
 		B66BF3F81B0C23670082F8D6 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66BF3F71B0C23670082F8D6 /* Default@2x.png */; };
+		B6E22B1F1B213B09001930CA /* OpenShare+Alipay.m in Sources */ = {isa = PBXBuildFile; fileRef = B6E22B1E1B213B09001930CA /* OpenShare+Alipay.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		B66BF3F21B0C1AEB0082F8D6 /* UIControl+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl+Blocks.h"; sourceTree = "<group>"; };
 		B66BF3F31B0C1AEB0082F8D6 /* UIControl+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl+Blocks.m"; sourceTree = "<group>"; };
 		B66BF3F71B0C23670082F8D6 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default@2x.png"; sourceTree = "<group>"; };
+		B6E22B1D1B213B09001930CA /* OpenShare+Alipay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+Alipay.h"; sourceTree = "<group>"; };
+		B6E22B1E1B213B09001930CA /* OpenShare+Alipay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+Alipay.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +175,8 @@
 				B66BF3E71B0C16290082F8D6 /* OpenShare+Weibo.m */,
 				B66BF3E81B0C16290082F8D6 /* OpenShare+Weixin.h */,
 				B66BF3E91B0C16290082F8D6 /* OpenShare+Weixin.m */,
+				B6E22B1D1B213B09001930CA /* OpenShare+Alipay.h */,
+				B6E22B1E1B213B09001930CA /* OpenShare+Alipay.m */,
 				B66BF3EA1B0C16290082F8D6 /* OpenShare.h */,
 				B66BF3EB1B0C16290082F8D6 /* OpenShare.m */,
 				B66BF3EC1B0C16290082F8D6 /* OpenShareHeader.h */,
@@ -291,6 +296,7 @@
 				B66BF3F11B0C16290082F8D6 /* OpenShare.m in Sources */,
 				B66BF3B31B0C137E0082F8D6 /* main.m in Sources */,
 				B66BF3EF1B0C16290082F8D6 /* OpenShare+Weibo.m in Sources */,
+				B6E22B1F1B213B09001930CA /* OpenShare+Alipay.m in Sources */,
 				B66BF3ED1B0C16290082F8D6 /* OpenShare+QQ.m in Sources */,
 				B66BF3F01B0C16290082F8D6 /* OpenShare+Weixin.m in Sources */,
 			);

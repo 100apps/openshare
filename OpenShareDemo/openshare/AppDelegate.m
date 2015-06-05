@@ -24,7 +24,7 @@
     [OpenShare connectWeiboWithAppKey:@"402180334"];
     [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
     [OpenShare connecRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
-    
+    [OpenShare connectAlipay];//支付宝参数都是服务器端生成的，这里不需要key.
     //添加demo ui
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController=[[UINavigationController alloc] initWithRootViewController:[ViewController new]];
