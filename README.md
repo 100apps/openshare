@@ -163,7 +163,17 @@ msg.title=@"Hello msg.title";
 
 ##TODO
 
-1. 没有安装客户端情况下的fallback
-2. 支付宝和微信支付
-3. Facebook和twitter等国外社交平台的支持
-4. Readme国际化
+1. [ ] 没有安装客户端情况下的fallback
+2. [x] [支付宝和微信支付](#update 20150605)
+3. [ ] Facebook和twitter等国外社交平台的支持
+4. [ ] Readme国际化
+
+##update 20150605
+
+支持支付宝／微信支付
+
+![支付gif](https://raw.githubusercontent.com/100apps/openshare/gh-pages/images/pay.gif)
+
+对于微信支付，首先要去[申请开通支付能力](https://open.weixin.qq.com)。如果app已经「获得微信支付能力」，那么请去配置`pay.php`。同样对于支付宝，也需要配置，否则demo是无法运行的。
+
+我强烈反对把密钥等放在app客户端里面，我相信一般人也不会这么干！所以OpenShare支付只支持服务器端计算签名。`pay.php`是用「世界上最好的语言」写成，当然你可以很方便的把它转化为其他语言实现。
