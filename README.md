@@ -8,7 +8,14 @@
 [![Platform](https://img.shields.io/cocoapods/p/OpenShare.svg?style=flat)][cocoadocs]
 [cocoadocs]: http://cocoadocs.org/docsets/OpenShare
 
->update 2015/06/03 重要更新! OpenShare在本周之内要支持支付宝和微信支付！！！代码测试中，绝不跳票。请先给star关注一下吧。
+##What's New
+
+1. [ ] 没有安装客户端情况下的fallback
+2. [x] [支付宝和微信支付](#update-20150605)
+3. [ ] Facebook和twitter等国外社交平台的支持
+4. [ ] Readme国际化
+
+##Introduction
 
 注: 为方便书写，如无特殊说明，下文中的「*客户端*」指的是QQ、微信、微博这样的社交软件官方开发的客户端；「*app*」特指我们自己开发的应用。
 
@@ -160,13 +167,6 @@ msg.title=@"Hello msg.title";
 ##Support or Contact
 
 在OpenShare使用过程中有任何问题，都可以添加一个[issues](issues)，我会及时解决。如果您想贡献代码，欢迎[Pull Requests](pulls)。其他任何问题可以在下面留言，或者通过邮箱<gf@gfzj.us>联系我。
-
-##TODO
-
-1. [ ] 没有安装客户端情况下的fallback
-2. [x] [支付宝和微信支付](#update 20150605)
-3. [ ] Facebook和twitter等国外社交平台的支持
-4. [ ] Readme国际化
 
 ##update 20150605
 
