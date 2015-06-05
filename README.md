@@ -123,7 +123,7 @@ OpenShare已经支持CocoaPods。所以您可以用:
 [OpenShare connectQQWithAppId:@"1103194207"];
 [OpenShare connectWeiboWithAppKey:@"402180334"];
 [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
-[OpenShare connecRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
+[OpenShare connectRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
 ``` 
 
 *第二步*：到`AppDelegate中`的`application:openURL:sourceApplication:annotation:`中添加整体回调：
