@@ -8,7 +8,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/OpenShare.svg?style=flat)][cocoadocs]
 [cocoadocs]: http://cocoadocs.org/docsets/OpenShare
 
-##What's New
+##TODO
 
 1. [ ] 没有安装客户端情况下的fallback
 2. [x] [支付宝和微信支付](#update-20150605)
