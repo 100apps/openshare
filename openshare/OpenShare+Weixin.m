@@ -136,12 +136,12 @@ static NSString *schema=@"Weixin";
     if ([url.scheme hasPrefix:@"wx"]) {
         NSDictionary *retDic=[NSPropertyListSerialization propertyListWithData:[[UIPasteboard generalPasteboard] dataForPasteboardType:@"content"]?:[[NSData alloc] init] options:0 format:0 error:nil][[self keyFor:schema][@"appid"]];
         NSLog(@"retDic\n%@",retDic);
-        if ([url.absoluteString containsString:@"://oauth"]) {
+        if ([url.absoluteString rangeOfString:@"://oauth"].location != NSNotFound) {
             //login succcess
             if ([self authSuccessCallback]) {
                 [self authSuccessCallback]([self parseUrl:url]);
             }
-        }else if([url.absoluteString containsString:@"://pay/"]){
+        }else if([url.absoluteString rangeOfString:@"://pay/"].location != NSNotFound){
             NSDictionary *urlMap=[self parseUrl:url];
             if ([urlMap[@"ret"] intValue]==0) {
                 if ([self paySuccessCallback]) {
