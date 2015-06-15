@@ -37,7 +37,7 @@ static NSString* schema=@"Alipay";
 }
 +(BOOL)Alipay_handleOpenURL{
     NSURL* url=[self returnedURL];
-    if ([url.absoluteString containsString:@"//safepay/"] ) {
+    if ([url.absoluteString rangeOfString:@"//safepay/"].location != NSNotFound) {
         NSError *err;
         NSDictionary *ret=[NSJSONSerialization JSONObjectWithData:[[self urlDecode:url.query]dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:&err];
         if (err||ret[@"memo"]==[NSNull null]||[ret[@"memo"][@"ResultStatus"] intValue]!=9000) {
