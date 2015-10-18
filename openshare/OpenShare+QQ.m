@@ -93,8 +93,8 @@ enum
         [ret appendString:[self base64AndUrlEncode:msg.title]];
     }else if([msg isEmpty:@[@"link"] AndNotEmpty:@[@"title",@"image",@"desc"]]){
         //图片分享
-        NSDictionary *data=@{@"file_data":msg.image,
-                             @"previewimagedata":msg.thumbnail?:msg.image
+        NSDictionary *data=@{@"file_data":[self dataWithImage:msg.image],
+                             @"previewimagedata":msg.thumbnail?  [self dataWithImage:msg.thumbnail] :[self dataWithImage:msg.image scale:CGSizeMake(36, 36)]
                              };
         [self setGeneralPasteboard:@"com.tencent.mqq.api.apiLargeData" Value:data encoding: OSPboardEncodingKeyedArchiver];
         [ret appendString:@"img&title="];
@@ -103,7 +103,7 @@ enum
         [ret appendString:[self base64Encode:msg.desc]];
     }else  if ([msg isEmpty:nil AndNotEmpty:@[@"title",@"desc",@"image",@"link",@"multimediaType"]]) {
         //新闻／多媒体分享（图片加链接）发送新闻消息 预览图像数据，最大1M字节 URL地址,必填，最长512个字符 via QQApiInterfaceObject.h
-        NSDictionary *data=@{@"previewimagedata":msg.image};
+        NSDictionary *data=@{@"previewimagedata":[self dataWithImage:msg.image]};
         [self setGeneralPasteboard:@"com.tencent.mqq.api.apiLargeData" Value:data encoding: OSPboardEncodingKeyedArchiver];
         NSString *msgType=@"news";
         if (msg.multimediaType==OSMultimediaTypeAudio) {

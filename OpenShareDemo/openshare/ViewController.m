@@ -17,14 +17,15 @@
 @implementation ViewController{
     NSDictionary *icons;
     UIScrollView *panel;
-    NSData *testImage,*testThumbImage,*testGifImage,*testFile;
+    UIImage *testImage,*testThumbImage;
+    NSData *testGifImage,*testFile;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     //初始化测试数据
-    testImage = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default@2x" ofType:@"png"]];
-    testThumbImage= [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"logo" ofType:@"png"]];
+    testImage = [UIImage imageNamed:@"Default"];//[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default@2x" ofType:@"png"]];
+    testThumbImage= [UIImage imageNamed:@"logo"];//[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"logo" ofType:@"png"]];
     testGifImage= [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"logo" ofType:@"gif"]];
     testFile= [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"pdf"]];
     
@@ -412,11 +413,11 @@
         msg.thumbnail=testThumbImage;
     }else if (btn.tag==30008) {
         //gif表情／同图片，只是格式是gif。
-        msg.image=testGifImage;
+        msg.file =testGifImage;
         msg.thumbnail=testThumbImage;
     }else if (btn.tag==30009) {
         //file
-        msg.image=testFile;
+        msg.file=testFile;
         msg.thumbnail=testThumbImage;
         msg.title=@"test.pdf";//添加到收藏的时候，微信会根据文件名打开。fileExt信息丢失。微信的bug
         msg.fileExt=@"pdf";

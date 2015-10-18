@@ -32,7 +32,7 @@ static NSString *schema=@"Weibo";
         message=@{
                   @"__class" : @"WBMessageObject",
                   @"imageObject":@{
-                          @"imageData":msg.image
+                          @"imageData":[self dataWithImage:msg.image]
                           },
                   @"text" : msg.title
                   };
@@ -45,7 +45,7 @@ static NSString *schema=@"Weibo";
                           @"__class" : @"WBWebpageObject",
                           @"description": msg.desc?:msg.title,
                           @"objectID" : @"identifier1",
-                          @"thumbnailData":msg.thumbnail?:msg.image,
+                          @"thumbnailData":msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image  scale:CGSizeMake(100, 100)],
                           @"title": msg.title,
                           @"webpageUrl":msg.link
                           }

@@ -32,25 +32,25 @@ static NSString* schema=@"Renren";
     NSMutableDictionary *dic=[[NSMutableDictionary alloc] initWithDictionary:@{@"title":msg.title}];
     if(msg.multimediaType==OSMultimediaTypeAudio){
         dic[@"description"]=msg.desc?:msg.title;
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]= msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(36, 36)];
         dic[@"url"]=msg.link;
         msgType=@"Voice";
     }else if(msg.multimediaType==OSMultimediaTypeVideo){
         dic[@"description"]=msg.desc?:msg.title;
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]= msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(36, 36)];
         dic[@"url"]=msg.link;
         msgType=@"Video";
     }else{
         if ([msg isEmpty:nil AndNotEmpty:@[@"image",@"link"]]) {
             //图文
             dic[@"description"]=msg.desc?:msg.title;
-            dic[@"thumbData"]=msg.thumbnail?:msg.image;
+            dic[@"thumbData"]= msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(36, 36)];
             dic[@"url"]=msg.link;
             msgType=@"ImgText";
         }else if ([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]) {
             //图片
-            dic[@"imageData"]=msg.image;
-            dic[@"thumbData"]=msg.thumbnail?:msg.image;
+            dic[@"imageData"]= [self dataWithImage:msg.image];
+            dic[@"thumbData"]= msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(36, 36)];
             msgType=@"ImgText";
         }else if ([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]) {
             //文本
