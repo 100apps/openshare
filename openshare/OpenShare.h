@@ -26,13 +26,14 @@ typedef enum : NSUInteger {
 @property NSString* title;
 @property NSString* desc;
 @property NSString* link;
-@property NSData* image;
-@property NSData* thumbnail;
+@property UIImage *image;
+@property UIImage *thumbnail;
 @property OSMultimediaType multimediaType;
 //for 微信
 @property NSString* extInfo;
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
+@property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
 /**
  *  判断emptyValueForKeys的value都是空的，notEmptyValueForKeys的value都不是空的。
  *
@@ -136,6 +137,9 @@ typedef enum : NSUInteger {
 
 +(paySuccess)paySuccessCallback;
 +(payFail)payFailCallback;
+
++ (NSData *)dataWithImage:(UIImage *)image;
++ (NSData *)dataWithImage:(UIImage *)image scale:(CGSize)size;
 
 @end
 

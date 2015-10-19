@@ -50,22 +50,27 @@ static NSString *schema=@"Weixin";
     }
     if (!msg.multimediaType) {
         //不指定类型
-        if ([msg isEmpty:@[@"image",@"link"] AndNotEmpty:@[@"title"]]) {
+        if ([msg isEmpty:@[@"image",@"link", @"file"] AndNotEmpty:@[@"title"]]) {
             //文本
             dic[@"command"]=@"1020";
             dic[@"title"]=msg.title;
         }else if([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]){
             //图片
-            dic[@"fileData"]=msg.image;
-            dic[@"thumbData"]=msg.thumbnail?:msg.image;
+            dic[@"fileData"]= [self dataWithImage:msg.image];
+            dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
             dic[@"objectType"]=@"2";
         }else if([msg isEmpty:nil AndNotEmpty:@[@"link",@"title",@"image"]]){
             //有链接。
             dic[@"description"]=msg.desc?:msg.title;
             dic[@"mediaUrl"]=msg.link;
             dic[@"objectType"]=@"5";
-            dic[@"thumbData"]=msg.thumbnail?:msg.image;
+            dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
             dic[@"title"] =msg.title;
+        } else if ([msg isEmpty:@[@"link"] AndNotEmpty:@[@"file"]]) {
+            //gif
+            dic[@"fileData"]= msg.file ? msg.file : [self dataWithImage:msg.image];
+            dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
+            dic[@"objectType"]=@"2";
         }
     }else if(msg.multimediaType==OSMultimediaTypeAudio){
         //music
@@ -73,31 +78,31 @@ static NSString *schema=@"Weixin";
         dic[@"mediaUrl"]=msg.link;
         dic[@"mediaDataUrl"]=msg.mediaDataUrl;
         dic[@"objectType"]=@"3";
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
         dic[@"title"] =msg.title;
     }else if(msg.multimediaType==OSMultimediaTypeVideo){
         //video
         dic[@"description"]=msg.desc?:msg.title;
         dic[@"mediaUrl"]=msg.link;
         dic[@"objectType"]=@"4";
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
         dic[@"title"] =msg.title;
     }else if(msg.multimediaType==OSMultimediaTypeApp){
         //app
         dic[@"description"]=msg.desc?:msg.title;
         if(msg.extInfo)dic[@"extInfo"]=msg.extInfo;
-        dic[@"fileData"]=msg.image;
+        dic[@"fileData"]=[self dataWithImage:msg.image];
         dic[@"mediaUrl"]=msg.link;
         dic[@"objectType"]=@"7";
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
         dic[@"title"] =msg.title;
     }else if(msg.multimediaType==OSMultimediaTypeFile){
         //file
         dic[@"description"]=msg.desc?:msg.title;
-        dic[@"fileData"]=msg.image;
+        dic[@"fileData"]=msg.file;
         dic[@"objectType"]=@"6";
         dic[@"fileExt"]=msg.fileExt?:@"";
-        dic[@"thumbData"]=msg.thumbnail?:msg.image;
+        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
         dic[@"title"] =msg.title;
     }
     NSData *output=[NSPropertyListSerialization dataWithPropertyList:@{[self keyFor:schema][@"appid"]:dic} format:NSPropertyListBinaryFormat_v1_0 options:0 error:nil];
