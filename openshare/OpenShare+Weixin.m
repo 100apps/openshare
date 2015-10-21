@@ -70,7 +70,7 @@ static NSString *schema=@"Weixin";
             //gif
             dic[@"fileData"]= msg.file ? msg.file : [self dataWithImage:msg.image];
             dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
-            dic[@"objectType"]=@"2";
+            dic[@"objectType"]=@"8";
         }
     }else if(msg.multimediaType==OSMultimediaTypeAudio){
         //music
