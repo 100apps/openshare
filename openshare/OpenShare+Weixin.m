@@ -56,6 +56,7 @@ static NSString *schema=@"Weixin";
             dic[@"title"]=msg.title;
         }else if([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]){
             //图片
+            dic[@"title"]=msg.title?:@"";
             dic[@"fileData"]= [self dataWithImage:msg.image];
             dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
             dic[@"objectType"]=@"2";
