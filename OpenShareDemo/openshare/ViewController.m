@@ -248,11 +248,11 @@
 -(void)qqViewHandler:(UIButton*)btn{
     UISegmentedControl *seg=(UISegmentedControl*)[panel viewWithTag:2002];
     OSMessage *msg=[[OSMessage alloc] init];
-    msg.title=@"Hello OpenShare (msg.title)";
+    msg.title=[NSString stringWithFormat:@"Hello OpenShare (msg.title) %f",[[NSDate date] timeIntervalSince1970]];
     if (btn.tag>=2) {
         msg.image=testImage;
         msg.thumbnail=testThumbImage;
-        msg.desc=@"这里写的是msg.description";
+        msg.desc=[NSString stringWithFormat:@"这里写的是msg.description %f",[[NSDate date] timeIntervalSince1970]];
     }
     if(btn.tag==3){
         msg.link=@"http://sports.qq.com/a/20120510/000650.htm";
