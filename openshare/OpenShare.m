@@ -117,7 +117,7 @@ static OSMessage *message;
         shareFailCallback=fail;
         return YES;
     }else{
-        NSLog(@"place connect%@ before you can share to it!!!",platform);
+        NSLog(@"please connect%@ before you can share to it!!!",platform);
         return NO;
     }
 }
@@ -127,7 +127,7 @@ static OSMessage *message;
         authFailCallback=fail;
         return YES;
     }else{
-        NSLog(@"place connect%@ before you can share to it!!!",platform);
+        NSLog(@"please connect%@ before you can share to it!!!",platform);
         return NO;
     }
 }
