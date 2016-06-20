@@ -103,7 +103,7 @@ static NSString *schema=@"Weibo";
         NSMutableDictionary *ret=[NSMutableDictionary dictionaryWithCapacity:items.count];
         for (NSDictionary *item in items) {
             for (NSString *k in item) {
-                ret[k]=[k isEqualToString:@"sdkVersion"]?item[k]:[NSKeyedUnarchiver unarchiveObjectWithData:item[k]];
+                ret[k]=[k isEqualToString:@"transferObject"]?[NSKeyedUnarchiver unarchiveObjectWithData:item[k]]:item[k];
             }
         }
         NSDictionary *transferObject=ret[@"transferObject"];
