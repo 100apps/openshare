@@ -118,7 +118,8 @@ enum
 }
 +(BOOL)QQ_handleOpenURL{
     NSURL* url=[self returnedURL];
-    if ([url.scheme hasPrefix:@"QQ"]) {
+    
+    void (^handleShareResponse)() = ^{
         //分享
         NSDictionary *dic=[self parseUrl:url];
         if (dic[@"error_description"]) {
@@ -134,19 +135,28 @@ enum
                 [self shareSuccessCallback]([self message]);
             }
         }
+    };
+    
+    if ([url.scheme hasPrefix:@"QQ"]) {
+        handleShareResponse();
         return YES;
-    }else if([url.scheme hasPrefix:@"tencent"]){
+    }
+    else if([url.scheme hasPrefix:@"tencent"]) {// 项目实测视频直播时分享回掉的prefix竟然是tencent开头
         //登陆auth
         NSDictionary *ret=[self generalPasteboardData:[@"com.tencent.tencent" stringByAppendingString:[self keyFor:schema][@"appid"]] encoding:OSPboardEncodingKeyedArchiver];
-        if (ret[@"ret"]&&[ret[@"ret"] intValue]==0) {
+        if (ret[@"ret"] && ([ret[@"ret"] intValue] == 0)) {
             if ( [self authSuccessCallback]) {
                 [self authSuccessCallback](ret);
             }
-        }else{
+        }
+        else if (ret[@"ret"]){
             NSError *err=[NSError errorWithDomain:@"auth_from_QQ" code:-1 userInfo:ret];
             if ([self authFailCallback]) {
                 [self authFailCallback](ret,err);
             }
+        }
+        if (!ret[@"ret"]) {
+            handleShareResponse();
         }
         return YES;
     }
