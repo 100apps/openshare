@@ -10,8 +10,8 @@
 
 @implementation OpenShare (Weibo)
 static NSString *schema=@"Weibo";
-+(void)connectWeiboWithAppKey:(NSString *)appKey{
-    [self set:schema Keys:@{@"appKey":appKey}];
++(void)connectWeiboWithAppKey:(NSString *)appKey andAppSecret:(NSString *)secret {
+    [self set:schema Keys:@{@"appKey":appKey, @"appSecret": secret}];
 }
 +(BOOL)isWeiboInstalled{
     return [self canOpen:@"weibosdk://request"];
@@ -71,29 +71,36 @@ static NSString *schema=@"Weibo";
     if (![self beginAuth:schema Success:success Fail:fail]) {
         return;
     }
-    NSString *uuid=[[NSUUID UUID] UUIDString];
-    NSArray *authData=@[
-                        @{@"transferObject":[NSKeyedArchiver archivedDataWithRootObject:@{
-                                                                                          @"__class" :@"WBAuthorizeRequest",
-                                                                                          @"redirectURI":redirectURI,
-                                                                                          @"requestID" :uuid,
-                                                                                          @"scope": scope?:@"all"
-                                                                                          }]},
-                        @{@"userInfo":[NSKeyedArchiver archivedDataWithRootObject:@{
-                                                                                     @"mykey":@"as you like",
-                                                                                    @"SSO_From" : @"SendMessageToWeiboViewController"
-                                                                                    }]
-                          },
-                        
-                        @{@"app":[NSKeyedArchiver archivedDataWithRootObject:@{
-                                                                               @"appKey" :[self keyFor:schema][@"appKey"],
-                                                                               @"bundleID" : [self CFBundleIdentifier],
-                                                                               @"name" :[self CFBundleDisplayName]
-                                                                               }]
-                          }
-                        ];
-    [UIPasteboard generalPasteboard].items=authData;
-    [self openURL:[NSString stringWithFormat:@"weibosdk://request?id=%@&sdkversion=003013000",uuid]];
+    if ([self isWeiboInstalled]) {
+        NSString *uuid=[[NSUUID UUID] UUIDString];
+        NSArray *authData=@[
+                            @{@"transferObject":[NSKeyedArchiver archivedDataWithRootObject:@{
+                                                                                              @"__class" :@"WBAuthorizeRequest",
+                                                                                              @"redirectURI":redirectURI,
+                                                                                              @"requestID" :uuid,
+                                                                                              @"scope": scope?:@"all"
+                                                                                              }]},
+                            @{@"userInfo":[NSKeyedArchiver archivedDataWithRootObject:@{
+                                                                                         @"mykey":@"as you like",
+                                                                                        @"SSO_From" : @"SendMessageToWeiboViewController"
+                                                                                        }]
+                              },
+                            
+                            @{@"app":[NSKeyedArchiver archivedDataWithRootObject:@{
+                                                                                   @"appKey" :[self keyFor:schema][@"appKey"],
+                                                                                   @"bundleID" : [self CFBundleIdentifier],
+                                                                                   @"name" :[self CFBundleDisplayName]
+                                                                                   }]
+                              }
+                            ];
+        [UIPasteboard generalPasteboard].items=authData;
+        [self openURL:[NSString stringWithFormat:@"weibosdk://request?id=%@&sdkversion=003013000",uuid]];
+    }
+    else {
+        // Web OAuth
+        NSString *webOAuth = [NSString stringWithFormat:@"https://open.weibo.cn/oauth2/authorize?client_id=%@&client_secret=%@&response_type=code&redirect_uri=%@&scope=%@", [self keyFor:schema][@"appKey"], [self keyFor:schema][@"appSecret"], redirectURI, scope?:@"all"];
+        [self openWebAuth:webOAuth redirectURI:redirectURI];
+    }
 }
 
 +(BOOL)Weibo_handleOpenURL{
