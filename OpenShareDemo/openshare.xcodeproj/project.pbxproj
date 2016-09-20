@@ -24,8 +24,19 @@
 		B66BF3F41B0C1AEB0082F8D6 /* UIControl+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3F31B0C1AEB0082F8D6 /* UIControl+Blocks.m */; };
 		B66BF3F81B0C23670082F8D6 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B66BF3F71B0C23670082F8D6 /* Default@2x.png */; };
 		B6E22B1F1B213B09001930CA /* OpenShare+Alipay.m in Sources */ = {isa = PBXBuildFile; fileRef = B6E22B1E1B213B09001930CA /* OpenShare+Alipay.m */; };
+		D02886531D90D22200269A24 /* Open_ShareTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D02886521D90D22200269A24 /* Open_ShareTests.m */; };
 		D08B4B131D8FD254004BCB31 /* WebviewAuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D08B4B121D8FD254004BCB31 /* WebviewAuthHelper.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D02886551D90D22200269A24 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B66BF3A51B0C137D0082F8D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B66BF3AC1B0C137E0082F8D6;
+			remoteInfo = openshare;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B66BF3AD1B0C137E0082F8D6 /* openshare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openshare.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,12 +70,22 @@
 		B66BF3F71B0C23670082F8D6 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default@2x.png"; sourceTree = "<group>"; };
 		B6E22B1D1B213B09001930CA /* OpenShare+Alipay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OpenShare+Alipay.h"; sourceTree = "<group>"; };
 		B6E22B1E1B213B09001930CA /* OpenShare+Alipay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+Alipay.m"; sourceTree = "<group>"; };
+		D02886501D90D22200269A24 /* Open ShareTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Open ShareTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D02886521D90D22200269A24 /* Open_ShareTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Open_ShareTests.m; sourceTree = "<group>"; };
+		D02886541D90D22200269A24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D08B4B111D8FD254004BCB31 /* WebviewAuthHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebviewAuthHelper.h; path = ../openshare/WebviewAuthHelper.h; sourceTree = "<group>"; };
 		D08B4B121D8FD254004BCB31 /* WebviewAuthHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebviewAuthHelper.m; path = ../openshare/WebviewAuthHelper.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B66BF3AA1B0C137E0082F8D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D028864D1D90D22200269A24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -79,6 +100,7 @@
 			children = (
 				B66BF3AF1B0C137E0082F8D6 /* openshare */,
 				B66BF3C91B0C137E0082F8D6 /* openshareTests */,
+				D02886511D90D22200269A24 /* Open ShareTests */,
 				B66BF3AE1B0C137E0082F8D6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				B66BF3AD1B0C137E0082F8D6 /* openshare.app */,
+				D02886501D90D22200269A24 /* Open ShareTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,6 +193,15 @@
 			path = ../../OpenShare;
 			sourceTree = "<group>";
 		};
+		D02886511D90D22200269A24 /* Open ShareTests */ = {
+			isa = PBXGroup;
+			children = (
+				D02886521D90D22200269A24 /* Open_ShareTests.m */,
+				D02886541D90D22200269A24 /* Info.plist */,
+			);
+			path = "Open ShareTests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -190,6 +222,24 @@
 			productReference = B66BF3AD1B0C137E0082F8D6 /* openshare.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D028864F1D90D22200269A24 /* Open ShareTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D02886571D90D22200269A24 /* Build configuration list for PBXNativeTarget "Open ShareTests" */;
+			buildPhases = (
+				D028864C1D90D22200269A24 /* Sources */,
+				D028864D1D90D22200269A24 /* Frameworks */,
+				D028864E1D90D22200269A24 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D02886561D90D22200269A24 /* PBXTargetDependency */,
+			);
+			name = "Open ShareTests";
+			productName = "Open ShareTests";
+			productReference = D02886501D90D22200269A24 /* Open ShareTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -203,6 +253,12 @@
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = CM2364627B;
 						ProvisioningStyle = Automatic;
+					};
+					D028864F1D90D22200269A24 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = CM2364627B;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B66BF3AC1B0C137E0082F8D6;
 					};
 				};
 			};
@@ -220,6 +276,7 @@
 			projectRoot = "";
 			targets = (
 				B66BF3AC1B0C137E0082F8D6 /* openshare */,
+				D028864F1D90D22200269A24 /* Open ShareTests */,
 			);
 		};
 /* End PBXProject section */
@@ -236,6 +293,13 @@
 				B66BF3BE1B0C137E0082F8D6 /* Images.xcassets in Resources */,
 				B66BF3F81B0C23670082F8D6 /* Default@2x.png in Resources */,
 				B66BF3DE1B0C14480082F8D6 /* test.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D028864E1D90D22200269A24 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +324,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D028864C1D90D22200269A24 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D02886531D90D22200269A24 /* Open_ShareTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D02886561D90D22200269A24 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B66BF3AC1B0C137E0082F8D6 /* openshare */;
+			targetProxy = D02886551D90D22200269A24 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B66BF3BF1B0C137E0082F8D6 /* LaunchScreen.xib */ = {
@@ -390,6 +470,44 @@
 			};
 			name = Release;
 		};
+		D02886581D90D22200269A24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = CM2364627B;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = "Open ShareTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "top.dawenhing.Open-ShareTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/openshare.app/openshare";
+			};
+			name = Debug;
+		};
+		D02886591D90D22200269A24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEVELOPMENT_TEAM = CM2364627B;
+				INFOPLIST_FILE = "Open ShareTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "top.dawenhing.Open-ShareTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/openshare.app/openshare";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -410,6 +528,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		D02886571D90D22200269A24 /* Build configuration list for PBXNativeTarget "Open ShareTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D02886581D90D22200269A24 /* Debug */,
+				D02886591D90D22200269A24 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
