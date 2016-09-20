@@ -21,7 +21,8 @@
     
     //第一步：注册key
     [OpenShare connectQQWithAppId:@"1103194207"];
-    [OpenShare connectWeiboWithAppKey:@"402180334"];
+    // TODO: 重新申请一个
+    [OpenShare connectWeiboWithAppKey:@"1457440153" andAppSecret:@"a5829047ff43ce3f8835ec61e2df338a"];
     [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
     [OpenShare connectRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
     [OpenShare connectAlipay];//支付宝参数都是服务器端生成的，这里不需要key.

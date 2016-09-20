@@ -149,7 +149,7 @@
     UIButton *auth=[self button:@"登录" WithCenter:CGPointMake(frame.size.width/2, 40)];
     [ret addSubview:auth];
     [auth addEventHandler:^(id sender) {
-        [OpenShare WeiboAuth:@"all" redirectURI:@"http://openshare.gfzj.us/" Success:^(NSDictionary *message) {
+        [OpenShare WeiboAuth:@"all" redirectURI:@"www.dawenhing.im" Success:^(NSDictionary *message) {
             ULog(@"微博登录成功:\n%@",message);
         } Fail:^(NSDictionary *message, NSError *error) {
             ULog(@"微博登录失败:\n%@\n%@",message,error);
