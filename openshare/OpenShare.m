@@ -7,6 +7,8 @@
 //
 
 #import "OpenShare.h"
+#import "WebviewAuthHelper.h"
+#import <objc/runtime.h>
 
 @implementation OpenShare
 /**
@@ -267,6 +269,25 @@ static OSMessage *message;
     UIImage* scaledImage =UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return scaledImage;
+}
+
++ (void)openWebAuth:(NSString *)webAuth redirectURI:(NSString *)redirectURI {
+    NSURL *URL = [NSURL URLWithString:webAuth];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    WebviewAuthHelper *helper = [[WebviewAuthHelper alloc] init];
+    helper.finishRedirectURI = redirectURI;
+    WKWebView *webview = helper.webview;
+    [webview loadRequest:request];
+    [helper showAuthview];
+}
+
++ (void)finishWebAuthWithResult:(NSDictionary *)info error:(NSError *)error{
+    if (error) {
+        NSLog(@"finished with error:%@", error);
+    }
+    else {
+        NSLog(@"auth result:%@", info);
+    }
 }
 
 @end

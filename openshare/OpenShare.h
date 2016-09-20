@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 /**
  分享类型，除了news以外，还可能是video／audio／app等。
  */
@@ -34,6 +35,8 @@ typedef enum : NSUInteger {
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
 @property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
+
+//@property (nonatomic, strong) UIWebView *authWebview;
 /**
  *  判断emptyValueForKeys的value都是空的，notEmptyValueForKeys的value都不是空的。
  *
@@ -140,6 +143,9 @@ typedef enum : NSUInteger {
 
 + (NSData *)dataWithImage:(UIImage *)image;
 + (NSData *)dataWithImage:(UIImage *)image scale:(CGSize)size;
+
++ (void)openWebAuth:(NSString *)webAuth redirectURI:(NSString *)redirectURI;
++ (void)finishWebAuthWithResult:(NSDictionary *)info error:(NSError *)error;
 
 @end
 
