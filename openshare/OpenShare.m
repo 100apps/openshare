@@ -282,11 +282,17 @@ static OSMessage *message;
 }
 
 + (void)finishWebAuthWithResult:(NSDictionary *)info error:(NSError *)error{
-    if (error) {
-        NSLog(@"finished with error:%@", error);
+    if (!error) {
+        NSLog(@"auth result:%@", info);
+        if (self.authSuccessCallback) {
+            self.authSuccessCallback(info);
+        }
     }
     else {
-        NSLog(@"auth result:%@", info);
+        NSLog(@"finished with error:%@", error);
+        if (self.authFailCallback) {
+            self.authFailCallback(info, error);
+        }
     }
 }
 
