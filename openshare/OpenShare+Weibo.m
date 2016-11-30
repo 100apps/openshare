@@ -51,6 +51,8 @@ static NSString *schema=@"Weibo";
                           }
                   
                   };
+    }else {//当传入的msg为nil或不满足上面三种情况的时候应该直接返回,否则message会为nil,在下面的代码里使用message时会崩溃
+        return;
     }
     NSString *uuid=[[NSUUID UUID] UUIDString];
     NSArray *messageData=@[
