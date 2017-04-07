@@ -63,6 +63,14 @@ typedef enum : NSUInteger {
 } OSPboardEncoding;
 @interface OpenShare : NSObject
 
+
++ (OpenShare *)shared;
+
+@property (nonatomic, copy) authSuccess authSuccess;
+@property (nonatomic, copy) authFail authFail;
+
+- (void)addWebViewByURL:(NSURL *)URL;
+
 /**
  *  设置平台的key
  *

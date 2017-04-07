@@ -9,13 +9,23 @@
 #import "OpenShare+Weibo.h"
 
 @implementation OpenShare (Weibo)
+
 static NSString *schema=@"Weibo";
-+(void)connectWeiboWithAppKey:(NSString *)appKey{
+
++(void)connectWeiboWithAppKey:(NSString *)appKey {
     [self set:schema Keys:@{@"appKey":appKey}];
 }
+
++(void)connectWeiboWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret redirectURI:(NSString *)redirectURI {
+    [self set:schema Keys:@{@"appKey":appKey,
+                            @"appSecret":appSecret,
+                            @"redirectURI":redirectURI}];
+}
+
 +(BOOL)isWeiboInstalled{
     return [self canOpen:@"weibosdk://request"];
 }
+
 +(void)shareToWeibo:(OSMessage*)msg Success:(shareSuccess)success Fail:(shareFail)fail{
     if (![self beginShare:schema Message:msg Success:success Fail:fail]) {
         return;
@@ -71,6 +81,15 @@ static NSString *schema=@"Weibo";
     if (![self beginAuth:schema Success:success Fail:fail]) {
         return;
     }
+    
+    if (![self isWeiboInstalled]) {
+        NSString *oauthURL = [NSString stringWithFormat:@"https://open.weibo.cn/oauth2/authorize?client_id=%@&response_type=code&redirect_uri=%@&scope=all", [OpenShare keyFor:@"Weibo"][@"appKey"], [OpenShare keyFor:@"Weibo"][@"redirectURI"]];
+        [OpenShare shared].authSuccess = success;
+        [OpenShare shared].authFail = fail;
+        [[OpenShare shared] addWebViewByURL:[NSURL URLWithString:oauthURL]];
+        return;
+    }
+    
     NSString *uuid=[[NSUUID UUID] UUIDString];
     NSArray *authData=@[
                         @{@"transferObject":[NSKeyedArchiver archivedDataWithRootObject:@{

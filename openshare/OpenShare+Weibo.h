@@ -16,6 +16,7 @@
 *  @param appKey 申请到的appKey
 */
 +(void)connectWeiboWithAppKey:(NSString *)appKey;
++(void)connectWeiboWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret redirectURI:(NSString *)redirectURI;
 +(BOOL)isWeiboInstalled;
 /**
  *  分享到微博，微博只支持三种类型：文本／图片／链接。根据OSMessage自动判定想分享的类型。
