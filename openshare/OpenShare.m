@@ -7,8 +7,33 @@
 //
 
 #import "OpenShare.h"
+#import <WebKit/WebKit.h>
+
+@interface OpenShare() <WKNavigationDelegate>
+
+@end
+
 
 @implementation OpenShare
+
++ (OpenShare *)shared {
+    static OpenShare *_instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[self alloc] init];
+    });
+    
+    return _instance;
+}
+
+- (id)init {
+    self = [super init];
+    if (self) {
+    }
+    
+    return self;
+}
+
 /**
  *  用于保存各个平台的key。每个平台需要的key／appid不一样，所以用dictionary保存。
  */
@@ -268,6 +293,147 @@ static OSMessage *message;
     UIGraphicsEndImageContext();
     return scaledImage;
 }
+
+- (void)hideWebView:(WKWebView *)webView withOAuthDic:(NSDictionary *)OAuthDic {
+    [self activityIndicatorViewAction:webView stop:YES];
+    [webView stopLoading];
+    
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        webView.frame = CGRectMake(0, UIScreen.mainScreen.bounds.size.height, webView.frame.size.width, webView.frame.size.height);
+    } completion:^(BOOL finished) {
+        [webView removeFromSuperview];
+        if (!OAuthDic) {
+            return;
+        }
+        
+        if (OAuthDic[@"error"]) {
+            if (self.authFail) {
+                self.authFail(nil, OAuthDic[@"error"]);
+            }
+        } else if (OAuthDic[@"JSON"]) {
+            if (self.authSuccess) {
+                NSDictionary *dic = OAuthDic[@"JSON"];
+                self.authSuccess(@{@"accessToken": (dic[@"access_token"] ?: [NSNull null]),
+                                   @"userID": (dic[@"uid"] ?: [NSNull null])});
+            }
+        }
+    }];
+}
+
+- (void)activityIndicatorViewAction:(WKWebView *)webView stop:(BOOL)stop {
+    for (UIActivityIndicatorView *view in webView.scrollView.subviews) {
+        if ([view isKindOfClass:[UIActivityIndicatorView class]]) {
+            if (stop) {
+                [view stopAnimating];
+            } else {
+                [view startAnimating];
+            }
+        }
+    }
+}
+
+- (void)addWebViewByURL:(NSURL *)URL {
+    WKWebView *webView = [WKWebView new];
+    webView.frame = UIScreen.mainScreen.bounds;
+    webView.navigationDelegate = self;
+    webView.backgroundColor = [UIColor whiteColor];
+    webView.frame = CGRectMake(0, 20, webView.frame.size.width, webView.frame.size.height - 20);
+    
+    [webView loadRequest:[NSURLRequest requestWithURL:URL]];
+
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    indicator.center = CGPointMake(CGRectGetMidX(webView.bounds), CGRectGetMidY(webView.bounds)+30);
+    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [webView.scrollView addSubview:indicator];
+    [indicator startAnimating];
+    
+    [[UIApplication sharedApplication].keyWindow addSubview:webView];
+    [UIView animateWithDuration:0.32 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        webView.frame = CGRectMake(0, 20, webView.frame.size.width, webView.frame.size.height);
+    } completion:nil];
+}
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    if (!webView.URL) {
+        return;
+    }
+    
+    if ([webView.URL.absoluteString containsString:@"about:blank"]) {
+        [self hideWebView:webView withOAuthDic:nil];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [self activityIndicatorViewAction:webView stop:YES];
+    if (!webView.URL) {
+        return;
+    }
+    
+    NSString *absoluteString = webView.URL.absoluteString;
+    NSMutableString *scriptString = [@"var button = document.createElement('a'); button.setAttribute('href', 'about:blank'); button.innerHTML = '关闭'; button.setAttribute('style', 'width: calc(100% - 40px); background-color: gray;display: inline-block;height: 40px;line-height: 40px;text-align: center;color: #777777;text-decoration: none;border-radius: 3px;background: linear-gradient(180deg, white, #f1f1f1);border: 1px solid #CACACA;box-shadow: 0 2px 3px #DEDEDE, inset 0 0 0 1px white;text-shadow: 0 2px 0 white;position: fixed;left: 0;bottom: 0;margin: 20px;font-size: 18px;'); document.body.appendChild(button);" mutableCopy];
+    if ([absoluteString containsString:@"open.weibo.cn"]) {
+        [scriptString appendString:@"document.querySelector('aside.logins').style.display = 'none';"];
+    }
+    [webView evaluateJavaScript:scriptString completionHandler:nil];
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
+    if (error.code == NSURLErrorNotConnectedToInternet) {
+        NSLog(@"error: lost connection");
+    }
+}
+
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation {
+    if (!webView.URL) {
+        return;
+    }
+    
+    // Weibo OAuth
+    if ([webView.URL.absoluteString.lowercaseString hasPrefix:[OpenShare keyFor:@"Weibo"][@"redirectURI"]]) {
+        [webView stopLoading];
+        
+        NSURLComponents *components = [NSURLComponents componentsWithURL:webView.URL resolvingAgainstBaseURL:NO];
+        NSMutableDictionary *queryDic = [NSMutableDictionary new];
+        for (NSURLQueryItem *item in components.queryItems) {
+            [queryDic setObject:item.value forKey:item.name];
+        }
+        
+        if (!queryDic[@"code"]) {
+            return;
+        }
+        
+        NSMutableString *string = [NSMutableString new];
+        [string appendFormat:@"https://api.weibo.com/oauth2/access_token?"];
+        [string appendFormat:@"client_id=%@", [OpenShare keyFor:@"Weibo"][@"appKey"]];
+        [string appendFormat:@"&client_secret=%@", [OpenShare keyFor:@"Weibo"][@"appSecret"]];
+        [string appendFormat:@"&grant_type=authorization_code&"];
+        [string appendFormat:@"redirect_uri=%@", [OpenShare keyFor:@"Weibo"][@"redirectURI"]];
+        [string appendFormat:@"&code=%@", queryDic[@"code"]];
+        
+        [self activityIndicatorViewAction:webView stop:NO];
+        
+        NSString *urlString = [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30];
+        [request setHTTPMethod:@"POST"];
+        NSURLSession *sharedSession = [NSURLSession sharedSession];
+        NSURLSessionDataTask *dataTask = [sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (data && (error == nil)) {
+                    NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                               options:NSJSONReadingAllowFragments
+                                                                                 error:nil];
+                    [self hideWebView:webView withOAuthDic:@{@"JSON":jsonObject}];
+                } else {
+                    [self hideWebView:webView withOAuthDic:@{@"error":error}];
+                }
+            });
+        }];
+        [dataTask resume];
+    }
+}
+
 
 @end
 
