@@ -1,4 +1,4 @@
-##Welcome to OpenShare.
+## Welcome to OpenShare.
 
 ![OpenShare Logo](https://github.com/100apps/openshare/raw/gh-pages/images/slogo.png)
 
@@ -8,14 +8,14 @@
 [![Platform](https://img.shields.io/cocoapods/p/OpenShare.svg?style=flat)][cocoadocs]
 [cocoadocs]: http://cocoadocs.org/docsets/OpenShare
 
-##TODO
+## TODO
 
 1. [ ] 没有安装客户端情况下的fallback
 2. [x] [支付宝和微信支付](#update-20150605)
 3. [ ] Facebook和twitter等国外社交平台的支持
 4. [ ] Readme国际化
 
-##Introduction
+## Introduction
 
 注: 为方便书写，如无特殊说明，下文中的「*客户端*」指的是QQ、微信、微博这样的社交软件官方开发的客户端；「*app*」特指我们自己开发的应用。
 
@@ -25,7 +25,7 @@ OpenShare的功能就是替代官方的SDK向各个平台的移动客户端(比�
 
 OpenShare非常小，目前支持QQ、微信、微博、人人，只有几百行代码。即使你不在项目中使用OpenShare，也可以clone下来研究一下app和客户端之间的通信机制，所以给个star是值得的。
 
-##设计思路
+## 设计思路
 
 比如分享功能，OpenShare有一个 OSMessage类，保存OpenShare向客户端发送的消息。分享的消息基本上有以下几种情况：
 
@@ -72,14 +72,14 @@ msg.title=@"Hello World";
 
 基于以上考虑，楼主用category实现了OpenShare。
 
-##Demo
+## Demo
 
 把项目clone下来以后，直接`open OpenShareDemo/openshare.xcodeproj`就可以运行了。注意sina微博的key没有通过sina的审核，直接分享会提示错误，可以替换成自己的key。
 
 ![OpenShare Demo](https://github.com/100apps/openshare/raw/gh-pages/images/demo.gif)
 
 
-##如何使用
+## 如何使用
 
 OpenShare已经支持CocoaPods。所以您可以用:
 
@@ -154,21 +154,21 @@ msg.title=@"Hello msg.title";
 }];
 ```
 
-##扩展支持更多平台
+## 扩展支持更多平台
 
 现在的社交网络各种各样，如何把这些平台集成到OpenShare中呢？就像插件一样，可以把自己实现的`OpenShare+foobar.h`和`OpenShare+foobar.m`添加进来就可以了。[这里](http://openshare.gfzj.us/#plugins)提供了一个模板工具，只需要输入你想扩展的平台的名称，就会自动生成`.h`和`.m`文件，然后基于这个模板修改即可。
 
-##Authors and Contributors
+## Authors and Contributors
 
 由于每个厂商的通信协议都不一样，所以hack的时候还是走了一些弯路，如果想了解整个实现过程，可以看看我的博客：<http://www.gfzj.us/series/openshare/>
 
 现在行业急需要像OAuth一样的标准，来实现app和客户端之间的分享，登录。这样就不用为每一个客户端实现一遍了。比如这个协议标准就叫做「OpenShare」（大言不惭、捂脸中）。客户端只需要声明支持OpenShare的某个版本，app就能很简单的调用了。如果您对实现OpenShare标准有任何想法，欢迎交流。
 
-##Support or Contact
+## Support or Contact
 
 在OpenShare使用过程中有任何问题，都可以添加一个[issues](issues)，我会及时解决。如果您想贡献代码，欢迎[Pull Requests](pulls)。其他任何问题可以在下面留言，或者通过邮箱<gf@gfzj.us>联系我。
 
-##update 20150605
+## update 20150605
 
 支持支付宝／微信支付
 
