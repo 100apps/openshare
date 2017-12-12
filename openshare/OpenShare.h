@@ -34,6 +34,10 @@ typedef enum : NSUInteger {
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
 @property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
+//for 微信小程序
+@property (nonatomic, strong) NSString *userName;   //原始id
+@property (nonatomic, strong) NSString *path;       //页面的路径
+@property (nonatomic, strong) NSData *hdImageData;  //新版本的预览图 128k
 /**
  *  判断emptyValueForKeys的value都是空的，notEmptyValueForKeys的value都不是空的。
  *

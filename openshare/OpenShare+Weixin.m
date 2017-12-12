@@ -60,6 +60,15 @@ static NSString *schema=@"Weixin";
             dic[@"fileData"]= [self dataWithImage:msg.image];
             dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
             dic[@"objectType"]=@"2";
+        }else if ([msg isEmpty:nil AndNotEmpty:@[@"userName",@"path",@"hdImageData",@"link"]]) {
+            //小程序
+            dic[@"description"]=msg.desc?:msg.title;
+            dic[@"mediaUrl"]=msg.link;
+            dic[@"title"] =msg.title;
+            dic[@"objectType"]=@"36";
+            dic[@"appBrandUserName"] =msg.userName;
+            dic[@"appBrandPath"] =msg.path;
+            dic[@"hdImageData"]=msg.hdImageData? :[self dataWithImage:msg.thumbnail scale:CGSizeMake(260, 210)];
         }else if([msg isEmpty:nil AndNotEmpty:@[@"link",@"title",@"image"]]){
             //有链接。
             dic[@"description"]=msg.desc?:msg.title;

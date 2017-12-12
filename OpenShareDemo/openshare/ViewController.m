@@ -21,7 +21,7 @@
 @implementation ViewController{
     NSDictionary *icons;
     UIScrollView *panel;
-    UIImage *testImage,*testThumbImage;
+    UIImage *testImage,*testThumbImage,*hdImage;
     NSData *testGifImage,*testFile;
 }
 
@@ -30,6 +30,7 @@
     //初始化测试数据
     testImage = [UIImage imageNamed:@"Default"];//[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default@2x" ofType:@"png"]];
     testThumbImage= [UIImage imageNamed:@"logo"];//[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"logo" ofType:@"png"]];
+    hdImage = [UIImage imageNamed:@"Default"];
     testGifImage= [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"logo" ofType:@"gif"]];
     testFile= [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"pdf"]];
     
@@ -324,7 +325,7 @@
     seg.center=CGPointMake(frame.size.width/2, 20);
     [ret addSubview:seg];
     
-    NSArray *titles=@[@"发送Text消息",@"发送Photo消息",@"发送Link消息",@"发送Music消息",@"发送Video消息",@"发送App消息",@"发送非gif表情",@"发送gif表情",@"发送文件消息"];
+    NSArray *titles=@[@"发送Text消息",@"发送Photo消息",@"发送Link消息",@"发送Music消息",@"发送Video消息",@"发送App消息",@"发送非gif表情",@"发送gif表情",@"发送文件消息",@"小程序分享"];
     NSArray *fromX=@[@(frame.size.width/4),@(frame.size.width*3/4)];
     int fromY=calcYFrom(seg)+ 40;
     for (int i=0; i<titles.count;i++ ) {
@@ -430,6 +431,13 @@
         msg.title=@"test.pdf";//添加到收藏的时候，微信会根据文件名打开。fileExt信息丢失。微信的bug
         msg.fileExt=@"pdf";
         msg.multimediaType=OSMultimediaTypeFile;
+    }else if (btn.tag==30010) {
+        //小程序
+        msg.path=@"/page/xxxx/views/detail/detail";//页面路径
+        msg.userName=@"请替换自己的微信原始id";
+        msg.hdImageData=UIImageJPEGRepresentation(hdImage, 1); //小程序高清大图小于128
+        msg.multimediaType=OSMultimediaTypeNews;
+        msg.link=@"http://www.baidu.com/";
     }
     
     
