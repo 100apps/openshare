@@ -324,7 +324,7 @@
     seg.center=CGPointMake(frame.size.width/2, 20);
     [ret addSubview:seg];
     
-    NSArray *titles=@[@"发送Text消息",@"发送Photo消息",@"发送Link消息",@"发送Music消息",@"发送Video消息",@"发送App消息",@"发送非gif表情",@"发送gif表情",@"发送文件消息"];
+    NSArray *titles=@[@"发送Text消息",@"发送Photo消息",@"发送Link消息",@"发送Music消息",@"发送Video消息",@"发送App消息",@"发送非gif表情",@"发送gif表情",@"发送文件消息",@"小程序分享"];
     NSArray *fromX=@[@(frame.size.width/4),@(frame.size.width*3/4)];
     int fromY=calcYFrom(seg)+ 40;
     for (int i=0; i<titles.count;i++ ) {
@@ -430,6 +430,15 @@
         msg.title=@"test.pdf";//添加到收藏的时候，微信会根据文件名打开。fileExt信息丢失。微信的bug
         msg.fileExt=@"pdf";
         msg.multimediaType=OSMultimediaTypeFile;
+    }else if (btn.tag==30010) {
+        // 目前只支持 会话
+        msg.path = @""; //页面路径
+        msg.link = @"http://www.baidu.com/"; //适配不支持小程序的微信版本需要配置一个默认url路径
+        msg.image = testImage; //高清图，小于128K
+        msg.thumbnail = testThumbImage; //6.5.9及以上版本微信客户端小程序类型分享使用大图卡片样式，使用WXMiniProgramObject的hdImageData属性展示高清大图；旧版微信客户端（6.5.8及以下版本）小程序类型消息卡片使用小图卡片样式，拉取thumbData字段图片信息。请开发者注意兼容旧版客户端。 小于32K
+        msg.withShareTicket = YES; //通常开发者希望分享出去的小程序被二次打开时可以获取到更多信息，例如群的标识。可以设置withShareTicket为true，当分享卡片在群聊中被其他用户打开时，可以获取到shareTicket，用于获取更多分享信息。详见 https://mp.weixin.qq.com/debug/wxadoc/dev/api/share.html#%E8%8E%B7%E5%8F%96%E6%9B%B4%E5%A4%9A%E8%BD%AC%E5%8F%91%E4%BF%A1%E6%81%AF
+        msg.miniAppType = OSMINIAppRelease;
+        msg.multimediaType = OSMultimediaTypeMiniApp;
     }
     
     
