@@ -14,7 +14,7 @@
  *
  *  @param appId AppID
  */
-+(void)connectWeixinWithAppId:(NSString *)appId;
++(void)connectWeixinWithAppId:(NSString *)appId miniAppId:(NSString *)miniAppId;
 +(BOOL)isWeixinInstalled;
 
 +(void)shareToWeixinSession:(OSMessage*)msg Success:(shareSuccess)success Fail:(shareFail)fail;

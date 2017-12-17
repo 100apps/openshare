@@ -17,8 +17,15 @@ typedef enum : NSUInteger {
     OSMultimediaTypeVideo,
     OSMultimediaTypeApp,
     OSMultimediaTypeFile,
+    OSMultimediaTypeMiniApp,
     OSMultimediaTypeUndefined
 } OSMultimediaType;
+
+typedef enum : NSUInteger {
+    OSMINIAppRelease,
+    OSMINIAppTest,
+    OSMINIAppPreview
+} OSMINIAppType;
 /**
  *  OSMessage保存分享消息数据。
  */
@@ -34,6 +41,11 @@ typedef enum : NSUInteger {
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
 @property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
+//for 微信小程序
+@property NSString* path;
+@property BOOL withShareTicket;
+@property OSMINIAppType miniAppType;
+
 /**
  *  判断emptyValueForKeys的value都是空的，notEmptyValueForKeys的value都不是空的。
  *

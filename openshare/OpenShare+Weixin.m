@@ -10,8 +10,9 @@
 
 @implementation OpenShare (Weixin)
 static NSString *schema=@"Weixin";
-+(void)connectWeixinWithAppId:(NSString *)appId{
-    [self set:schema Keys:@{@"appid":appId}];
++(void)connectWeixinWithAppId:(NSString *)appId miniAppId:(NSString *)miniAppId{
+    [self set:schema Keys:@{@"appid":appId,
+                            @"miniappid":miniAppId}];
 
 }
 +(BOOL)isWeixinInstalled{
@@ -44,70 +45,98 @@ static NSString *schema=@"Weixin";
  *  @return 需要打开的url
  */
 +(NSString*)genWeixinShareUrl:(OSMessage*)msg to:(int)shareTo{
-    NSMutableDictionary *dic=[[NSMutableDictionary alloc] initWithDictionary:@{@"result":@"1",@"returnFromApp" :@"0",@"scene" : [NSString stringWithFormat:@"%d",shareTo],@"sdkver" : @"1.5",@"command" : @"1010"}];
-    if (msg.multimediaType==OSMultimediaTypeNews) {
-        msg.multimediaType=0;
+
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+
+    dic[@"result"] = @"1";
+    dic[@"returnFromApp"] = @"1";
+    dic[@"scene"] = [NSString stringWithFormat:@"%d",shareTo];
+    dic[@"sdkver"] = @"1.5";
+    dic[@"command"] = @"1010";
+
+    switch (msg.multimediaType) {
+        case OSMultimediaTypeAudio:
+            dic[@"description"] = msg.desc?:msg.title;
+            dic[@"mediaUrl"] = msg.link;
+            dic[@"mediaDataUrl"] = msg.mediaDataUrl;
+            dic[@"objectType"] = @"3";
+            dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
+            dic[@"title"] = msg.title;
+            break;
+
+        case OSMultimediaTypeVideo:
+            dic[@"description"] = msg.desc?:msg.title;
+            dic[@"mediaUrl"] = msg.link;
+            dic[@"objectType"] = @"4";
+            dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
+            dic[@"title"] = msg.title;
+            break;
+        case OSMultimediaTypeApp:
+            dic[@"description"] = msg.desc?:msg.title;
+            if(msg.extInfo) {
+                dic[@"extInfo"] = msg.extInfo;
+            }
+            dic[@"fileData"] = [self dataWithImage:msg.image];
+            dic[@"mediaUrl"] = msg.link;
+            dic[@"objectType"] = @"7";
+            dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
+            dic[@"title"] = msg.title;
+            break;
+        case OSMultimediaTypeFile:
+
+            dic[@"description"] = msg.desc?:msg.title;
+            dic[@"fileData"] = msg.file;
+            dic[@"objectType"] = @"6";
+            dic[@"fileExt"] = msg.fileExt?:@"";
+            dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
+            dic[@"title"] = msg.title;
+            break;
+        case OSMultimediaTypeMiniApp:
+            dic[@"objectType"] = @"36";
+            dic[@"title"] = msg.title;
+            dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
+            dic[@"hdThumbData"] = [self dataWithImage:msg.image];
+            dic[@"appBrandPath"] = msg.path;
+            dic[@"mediaUrl"] = msg.link;
+            dic[@"withShareTicket"] = @(msg.withShareTicket);
+            dic[@"miniprogramType"] = @(msg.miniAppType);
+            dic[@"appBrandUserName"] = [self keyFor:schema][@"miniappid"];
+            break;
+        default:
+            //不指定类型
+            if ([msg isEmpty:@[@"image",@"link", @"file"] AndNotEmpty:@[@"title"]]) {
+                //文本
+                dic[@"command"] = @"1020";
+                dic[@"title"] = msg.title;
+            }else if([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]){
+                //图片
+                dic[@"title"] = msg.title?:@"";
+                dic[@"fileData"] = [self dataWithImage:msg.image];
+                dic[@"thumbData"] = msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
+                dic[@"objectType"] = @"2";
+            }else if([msg isEmpty:nil AndNotEmpty:@[@"link",@"title",@"image"]]){
+                //有链接。
+                dic[@"description"] = msg.desc?:msg.title;
+                dic[@"mediaUrl"] = msg.link;
+                dic[@"objectType"] = @"5";
+                dic[@"thumbData"] = msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
+                dic[@"title"] =msg.title;
+            } else if ([msg isEmpty:@[@"link"] AndNotEmpty:@[@"file"]]) {
+                //gif
+                dic[@"fileData"]= msg.file ? msg.file : [self dataWithImage:msg.image];
+                dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
+                dic[@"objectType"]=@"8";
+            }
+            break;
     }
-    if (!msg.multimediaType) {
-        //不指定类型
-        if ([msg isEmpty:@[@"image",@"link", @"file"] AndNotEmpty:@[@"title"]]) {
-            //文本
-            dic[@"command"]=@"1020";
-            dic[@"title"]=msg.title;
-        }else if([msg isEmpty:@[@"link"] AndNotEmpty:@[@"image"]]){
-            //图片
-            dic[@"title"]=msg.title?:@"";
-            dic[@"fileData"]= [self dataWithImage:msg.image];
-            dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
-            dic[@"objectType"]=@"2";
-        }else if([msg isEmpty:nil AndNotEmpty:@[@"link",@"title",@"image"]]){
-            //有链接。
-            dic[@"description"]=msg.desc?:msg.title;
-            dic[@"mediaUrl"]=msg.link;
-            dic[@"objectType"]=@"5";
-            dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
-            dic[@"title"] =msg.title;
-        } else if ([msg isEmpty:@[@"link"] AndNotEmpty:@[@"file"]]) {
-            //gif
-            dic[@"fileData"]= msg.file ? msg.file : [self dataWithImage:msg.image];
-            dic[@"thumbData"]=msg.thumbnail ? [self dataWithImage:msg.thumbnail] : [self dataWithImage:msg.image scale:CGSizeMake(100, 100)];
-            dic[@"objectType"]=@"8";
-        }
-    }else if(msg.multimediaType==OSMultimediaTypeAudio){
-        //music
-        dic[@"description"]=msg.desc?:msg.title;
-        dic[@"mediaUrl"]=msg.link;
-        dic[@"mediaDataUrl"]=msg.mediaDataUrl;
-        dic[@"objectType"]=@"3";
-        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
-        dic[@"title"] =msg.title;
-    }else if(msg.multimediaType==OSMultimediaTypeVideo){
-        //video
-        dic[@"description"]=msg.desc?:msg.title;
-        dic[@"mediaUrl"]=msg.link;
-        dic[@"objectType"]=@"4";
-        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
-        dic[@"title"] =msg.title;
-    }else if(msg.multimediaType==OSMultimediaTypeApp){
-        //app
-        dic[@"description"]=msg.desc?:msg.title;
-        if(msg.extInfo)dic[@"extInfo"]=msg.extInfo;
-        dic[@"fileData"]=[self dataWithImage:msg.image];
-        dic[@"mediaUrl"]=msg.link;
-        dic[@"objectType"]=@"7";
-        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
-        dic[@"title"] =msg.title;
-    }else if(msg.multimediaType==OSMultimediaTypeFile){
-        //file
-        dic[@"description"]=msg.desc?:msg.title;
-        dic[@"fileData"]=msg.file;
-        dic[@"objectType"]=@"6";
-        dic[@"fileExt"]=msg.fileExt?:@"";
-        dic[@"thumbData"]=msg.thumbnail? [self dataWithImage:msg.thumbnail]:[self dataWithImage:msg.image scale:CGSizeMake(100, 100)];;
-        dic[@"title"] =msg.title;
-    }
-    NSData *output=[NSPropertyListSerialization dataWithPropertyList:@{[self keyFor:schema][@"appid"]:dic} format:NSPropertyListBinaryFormat_v1_0 options:0 error:nil];
+
+    NSData *output = [NSPropertyListSerialization dataWithPropertyList:@{[self keyFor:schema][@"appid"]: dic}
+                                                                format:NSPropertyListBinaryFormat_v1_0
+                                                               options:0
+                                                                 error:nil];
+
     [[UIPasteboard generalPasteboard] setData:output forPasteboardType:@"content"];
+
     return [NSString stringWithFormat:@"weixin://app/%@/sendreq/?",[self keyFor:schema][@"appid"]];
 }
 
