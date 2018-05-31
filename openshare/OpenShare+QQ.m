@@ -20,7 +20,7 @@ enum
 };
 
 +(void)connectQQWithAppId:(NSString *)appId{
-    [self set:schema Keys:@{@"appid":appId,@"callback_name":[NSString stringWithFormat:@"QQ%08llx",[appId longLongValue]]}];
+    [self set:schema Keys:@{@"appid":appId,@"callback_name":[NSString stringWithFormat:@"QQ%08llX",[appId longLongValue]]}];
 }
 +(BOOL)isQQInstalled{
     return [self canOpen:@"mqqapi://"];
