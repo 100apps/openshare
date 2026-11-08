@@ -15,16 +15,18 @@ import json, subprocess, sys, os
 requested = os.environ.get('OPENSHARE_IOS_RUNTIME')
 if requested:
     runtimes = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'runtimes', '-j']))['runtimes']
-    runtime = next((r for r in runtimes if r.get('isAvailable') and r['version'] == requested), None)
+    required_build = os.environ.get('OPENSHARE_IOS_RUNTIME_BUILD')
+    runtime = next((r for r in runtimes if r.get('isAvailable') and r['version'] == requested and
+                    (not required_build or r.get('buildversion') == required_build)), None)
     if not runtime:
-        raise SystemExit(f'Required iOS {requested} runtime is not installed')
+        raise SystemExit(f'Required iOS {requested} runtime ({required_build}) is not installed')
     for family in ['iPhone', 'iPad']:
         device_type = next((t for t in runtime.get('supportedDeviceTypes', []) if t['name'].startswith(family + ' ')), None)
         if not device_type:
             raise SystemExit(f'iOS {requested} does not provide a supported {family} device type')
         device = subprocess.check_output(['xcrun', 'simctl', 'create', f'OpenShare CI {family}',
                                          device_type['identifier'], runtime['identifier']], text=True).strip()
-        print(f'Testing {family} on iOS {requested} ({device})', file=sys.stderr)
+        print(f'Testing {family} on iOS {requested} build {runtime.get("buildversion")} ({device})', file=sys.stderr)
         print(device)
     raise SystemExit(0)
 devices = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'devices', 'available', '-j']))['devices']

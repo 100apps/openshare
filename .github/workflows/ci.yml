@@ -67,11 +67,12 @@ jobs:
         run: |
           echo 'DEVELOPER_DIR=/Applications/Xcode_27.2.app/Contents/Developer' >> "$GITHUB_ENV"
           echo 'OPENSHARE_IOS_RUNTIME=27.2' >> "$GITHUB_ENV"
+          echo 'OPENSHARE_IOS_RUNTIME_BUILD=24B8117' >> "$GITHUB_ENV"
       - name: Record Xcode and available SDKs
         run: xcodebuild -version && xcodebuild -showsdks
       - name: Download Apple iOS 27.2 runtime
         if: matrix.runner == 'xcode-27'
-        run: xcodebuild -downloadPlatform iOS -buildVersion 27.2 -architectureVariant arm64
+        run: xcodebuild -downloadPlatform iOS -buildVersion 24B8117 -architectureVariant arm64
       - name: Install project generator
         run: brew install xcodegen
       - name: Download pinned official WeChat SDK
