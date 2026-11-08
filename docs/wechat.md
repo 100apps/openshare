@@ -85,7 +85,7 @@ request.message = mediaMessage; // 自己按官方文档配置的 WXMediaMessage
 // Application 或其他长期持有者中，在自己的授权流程完成后初始化，主线程调用：
 WeChat wechat = new WeChat(context, "你的微信AppID");
 wechat.shareText("Hello", SendMessageToWX.Req.WXSceneSession, (response, error) -> {
-    // error 为 null / busy / not_installed / invalid_request / send_failed / cancelled / wechat_error。
+    // error 为 null / busy / not_installed / invalid_request / invalid_response / send_failed / cancelled / wechat_error。
     // response 非 null 时保留原始 errCode / errStr。
 });
 wechat.shareLink("https://example.com/article", "Hello", "description", 0, callback);

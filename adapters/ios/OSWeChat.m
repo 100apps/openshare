@@ -27,6 +27,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 }
 
 - (void)shareMessage:(OSMessage *)message scene:(int)scene completion:(OSWeChatCompletion)completion {
+    if (!completion) return;
     if (!message || scene < 0 || scene > 2 || message.file.length || message.fileURL ||
         (message.multimediaType != OSMultimediaTypeNews && message.multimediaType != OSMultimediaTypeUndefined)) {
         completion(nil, [self error:1 description:@"Use sendRequest: for advanced official SDK media objects."]);
@@ -63,6 +64,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 }
 
 - (void)authorize:(NSString *)scope completion:(OSWeChatCompletion)completion {
+    if (!completion) return;
     if (!scope.length) { completion(nil, [self error:1 description:@"Scope is required."]); return; }
     SendAuthReq *request = [SendAuthReq new];
     request.scope = scope;
@@ -71,6 +73,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 }
 
 - (void)sendRequest:(BaseReq *)request completion:(OSWeChatCompletion)completion {
+    if (!completion) return;
     if (![request isKindOfClass:SendMessageToWXReq.class] && ![request isKindOfClass:PayReq.class]) {
         completion(nil, [self error:1 description:@"Use a media/payment request, or authorize: for OAuth."]);
         return;
@@ -103,6 +106,10 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
     if ([self.pendingRequest isKindOfClass:SendAuthReq.class]) {
         if (![response isKindOfClass:SendAuthResp.class] ||
             ![self.authState isEqualToString:((SendAuthResp *)response).state]) return;
+        if (response.errCode == WXSuccess && !((SendAuthResp *)response).code.length) {
+            [self finish:response error:[self error:5 description:@"WeChat returned an empty authorization code."]];
+            return;
+        }
     } else if ([self.pendingRequest isKindOfClass:SendMessageToWXReq.class]) {
         if (![response isKindOfClass:SendMessageToWXResp.class]) return;
     } else if ([self.pendingRequest isKindOfClass:PayReq.class]) {

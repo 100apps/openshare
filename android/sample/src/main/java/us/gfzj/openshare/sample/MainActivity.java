@@ -25,9 +25,9 @@ public final class MainActivity extends Activity {
             return insets;
         });
         Button share = new Button(this);
-        share.setText("Share / 分享");
+        share.setText(R.string.share);
         share.setOnClickListener(view -> OpenShare.share(this,
-                ShareMessage.text("OpenShare https://github.com/100apps/openshare"), "Share"));
+                ShareMessage.text("OpenShare https://github.com/100apps/openshare"), getString(R.string.share)));
         layout.addView(share);
         setContentView(layout);
     }

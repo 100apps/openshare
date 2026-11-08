@@ -2,16 +2,16 @@ plugins { id 'com.android.library' }
 android {
     namespace 'us.gfzj.openshare.wechat'
     compileSdk { version = release(37) { minorApiLevel = 2 } }
-    defaultConfig { minSdk 23 }
+    defaultConfig { minSdk 23; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    testOptions { unitTests.includeAndroidResources = true }
     lint { abortOnError true; warningsAsErrors true }
 }
 dependencies {
     api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.40'
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.17'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
 }

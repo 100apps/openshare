@@ -9,6 +9,25 @@ settings:
     CLANG_ENABLE_OBJC_ARC: YES
     GENERATE_INFOPLIST_FILE: YES
 targets:
+  OpenShareSample:
+    type: application
+    platform: iOS
+    sources: [Sample]
+    dependencies:
+      - target: OpenShare
+    info:
+      path: Sample/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: OSShareSceneDelegate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareSample
   OpenShare:
     type: framework
     platform: iOS
@@ -43,16 +62,20 @@ targets:
     platform: iOS
     sources: [Tests]
     dependencies:
+      - target: OpenShareSample
       - target: OpenShare
       - target: OpenShareWeChat
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareTests
+        TEST_HOST: '$(BUILT_PRODUCTS_DIR)/OpenShareSample.app/OpenShareSample'
+        BUNDLE_LOADER: '$(TEST_HOST)'
 schemes:
   OpenShareCI:
     build:
       targets:
         OpenShare: all
         OpenShareWeChat: all
+        OpenShareSample: all
     test:
       targets: [OpenShareTests]

@@ -89,6 +89,12 @@ static BOOL testSendAccepted = YES;
 }
 - (void)testSystemSharePresentsWithPopoverAnchor {
     UIWindow *window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if ([scene isKindOfClass:UIWindowScene.class] && scene.activationState == UISceneActivationStateForegroundActive) {
+            window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
+            break;
+        }
+    }
     UIViewController *presenter = [UIViewController new];
     window.rootViewController = presenter;
     [window makeKeyAndVisible];
@@ -125,6 +131,7 @@ static BOOL testSendAccepted = YES;
     [client onResp:response];
     XCTAssertEqual(count, 0);
     response.state = ((SendAuthReq *)sentRequest).state;
+    response.code = @"server-exchange-code";
     [client onResp:response];
     [client onResp:response];
     XCTAssertEqual(count, 1);
@@ -145,5 +152,17 @@ static BOOL testSendAccepted = YES;
     late.state = ((SendAuthReq *)sentRequest).state;
     [client onResp:late];
     XCTAssertEqual(count, 1);
+}
+- (void)testWeChatRejectsEmptySuccessfulAuthorizationCode {
+    OSWeChat *client = [self client];
+    __block BOOL called = NO;
+    [client authorize:@"snsapi_userinfo" completion:^(BaseResp *response, NSError *error) {
+        called = YES;
+        XCTAssertEqual(error.code, 5);
+    }];
+    SendAuthResp *response = [SendAuthResp new];
+    response.state = ((SendAuthReq *)sentRequest).state;
+    [client onResp:response];
+    XCTAssertTrue(called);
 }
 @end

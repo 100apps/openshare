@@ -11,11 +11,10 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.annotation.UiThreadTest;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 36)
+@RunWith(AndroidJUnit4.class)
 public class WeChatTest {
     private WeChat wechat;
     private BaseReq sent;
@@ -38,7 +37,7 @@ public class WeChatTest {
         wechat = new WeChat(api);
     }
 
-    @Test public void validatesAuthStateAndIgnoresReplayedCallback() {
+    @Test @UiThreadTest public void validatesAuthStateAndIgnoresReplayedCallback() {
         wechat.authorize("snsapi_userinfo", (response, error) -> results.add(error == null ? "ok" : error));
         SendAuth.Resp response = new SendAuth.Resp();
         response.state = "wrong";
@@ -51,7 +50,7 @@ public class WeChatTest {
         assertEquals(List.of("ok"), results);
     }
 
-    @Test public void preventsOverlappingRequestsAndReportsCancellation() {
+    @Test @UiThreadTest public void preventsOverlappingRequestsAndReportsCancellation() {
         wechat.shareText("hello", 0, (response, error) -> results.add(error));
         wechat.shareText("other", 0, (response, error) -> results.add(error));
         assertEquals(List.of("busy"), results);
@@ -67,7 +66,7 @@ public class WeChatTest {
         assertEquals(2, results.size());
     }
 
-    @Test public void handlesMissingAppAndSendFailure() {
+    @Test @UiThreadTest public void handlesMissingAppAndSendFailure() {
         installed = false;
         wechat.shareText("hello", 0, (response, error) -> results.add(error));
         installed = true;
@@ -77,5 +76,13 @@ public class WeChatTest {
         wechat.shareText("hello", 0, (response, error) -> results.add(error));
         wechat.cancel();
         assertEquals(List.of("not_installed", "send_failed", "cancelled"), results);
+    }
+
+    @Test @UiThreadTest public void rejectsEmptySuccessfulAuthorizationCode() {
+        wechat.authorize("snsapi_userinfo", (response, error) -> results.add(error));
+        SendAuth.Resp response = new SendAuth.Resp();
+        response.state = ((SendAuth.Req) sent).state;
+        wechat.onResp(response);
+        assertEquals(List.of("invalid_response"), results);
     }
 }

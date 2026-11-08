@@ -17,5 +17,7 @@ while IFS= read -r simulator; do
   xcodebuild test -project ios/OpenShareCI.xcodeproj -scheme OpenShareCI \
     -destination "platform=iOS Simulator,id=$simulator" \
     -resultBundlePath ".build/tests-$simulator.xcresult" \
+    -test-timeouts-enabled YES -default-test-execution-time-allowance 60 \
+    -maximum-test-execution-time-allowance 120 \
     CODE_SIGNING_ALLOWED=NO
 done < .build/simulator-ids

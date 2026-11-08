@@ -13,6 +13,7 @@ concurrency:
 jobs:
   android:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v6
@@ -23,7 +24,7 @@ jobs:
         with:
           validate-wrappers: true
       - name: Install stable Android SDK
-        run: sdkmanager 'platforms;android-37.2' 'build-tools;37.0.0'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.2" "build-tools;37.0.0"'
       - name: Test, lint and build libraries and sample
         working-directory: android
         run: ./gradlew test lint assembleDebug --stacktrace
@@ -40,7 +41,7 @@ jobs:
           arch: x86_64
           profile: pixel_6
           working-directory: android
-          script: ./gradlew :sample:connectedDebugAndroidTest
+          script: ./gradlew :sample:connectedDebugAndroidTest :openshare-wechat:connectedDebugAndroidTest
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -50,6 +51,7 @@ jobs:
             android/**/build/outputs/aar/
             android/sample/build/outputs/apk/debug/
   ios:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -80,3 +82,4 @@ jobs:
         with:
           name: ios-results-${{ matrix.runner }}
           path: .build/*.xcresult
+          include-hidden-files: true

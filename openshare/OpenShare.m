@@ -261,6 +261,12 @@ static OSMessage *message;
             }
         }
     }
+    // Applications without a scene manifest still use the pre-scene lifecycle.
+    if (![NSBundle.mainBundle objectForInfoDictionaryKey:@"UIApplicationSceneManifest"]) {
+        for (UIWindow *window in UIApplication.sharedApplication.windows) {
+            if (window.isKeyWindow) return window;
+        }
+    }
     return nil;
 }
 

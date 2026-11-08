@@ -14,9 +14,12 @@ NSErrorDomain const OSSystemShareErrorDomain = @"us.gfzj.openshare.system";
     } else if (message.multimediaType == OSMultimediaTypeApp ||
                message.multimediaType == OSMultimediaTypeMiniApp) {
         reason = @"App and mini-program messages require a platform adapter.";
+    } else if (message.multimediaType == OSMultimediaTypeFile && !message.fileURL) {
+        reason = @"File messages require a readable fileURL.";
     } else {
-        if (message.title.length) [items addObject:[message.title copy]];
-        if (message.desc.length) [items addObject:[message.desc copy]];
+        NSCharacterSet *whitespace = NSCharacterSet.whitespaceAndNewlineCharacterSet;
+        if ([message.title stringByTrimmingCharactersInSet:whitespace].length) [items addObject:[message.title copy]];
+        if ([message.desc stringByTrimmingCharactersInSet:whitespace].length) [items addObject:[message.desc copy]];
         if (message.link.length) {
             NSURL *url = [NSURL URLWithString:message.link];
             if (!url.host.length || ![@[@"http", @"https"] containsObject:url.scheme.lowercaseString]) {
@@ -28,7 +31,9 @@ NSErrorDomain const OSSystemShareErrorDomain = @"us.gfzj.openshare.system";
         if (message.image) [items addObject:message.image];
         if (message.fileURL) {
             NSNumber *regularFile = nil;
-            [message.fileURL getResourceValue:&regularFile forKey:NSURLIsRegularFileKey error:nil];
+            if (message.fileURL.isFileURL) {
+                [message.fileURL getResourceValue:&regularFile forKey:NSURLIsRegularFileKey error:nil];
+            }
             if (!message.fileURL.isFileURL || !regularFile.boolValue ||
                 ![[NSFileManager defaultManager] isReadableFileAtPath:message.fileURL.path]) {
                 reason = @"fileURL must point to a readable local file.";

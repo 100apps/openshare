@@ -35,3 +35,4 @@ local.properties
 Pods/
 *.xcresult
 ios/OpenShareCI.xcodeproj/
+ios/Sample/Info.plist

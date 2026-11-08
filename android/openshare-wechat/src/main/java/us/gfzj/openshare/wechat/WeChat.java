@@ -10,6 +10,7 @@ import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -73,7 +74,9 @@ public final class WeChat implements IWXAPIEventHandler {
 
     /** For server-signed PayReq and other official SDK requests. */
     public void send(BaseReq request, Callback callback) {
-        if (request instanceof SendAuth.Req) throw new IllegalArgumentException("Use authorize for OAuth state validation");
+        if (!(request instanceof PayReq) && !(request instanceof SendMessageToWX.Req)) {
+            throw new IllegalArgumentException("Use a media/payment request, or authorize for OAuth");
+        }
         send(request, null, callback);
     }
 
@@ -110,6 +113,11 @@ public final class WeChat implements IWXAPIEventHandler {
         if (pending == null || response == null || response.getType() != responseType) return;
         if (response instanceof SendAuth.Resp) {
             if (!authState.equals(((SendAuth.Resp) response).state)) return;
+            if (response.errCode == BaseResp.ErrCode.ERR_OK &&
+                    (((SendAuth.Resp) response).code == null || ((SendAuth.Resp) response).code.isEmpty())) {
+                complete(response, "invalid_response");
+                return;
+            }
         } else if (!transaction.equals(response.transaction)) return;
         complete(response, response.errCode == BaseResp.ErrCode.ERR_OK ? null :
                 response.errCode == BaseResp.ErrCode.ERR_USER_CANCEL ? "cancelled" : "wechat_error");

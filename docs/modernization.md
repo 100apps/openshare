@@ -27,6 +27,7 @@
 ## 自动化覆盖
 
 - Android：Unicode / URL 保真、附件 ClipData 和只读授权、空内容与 `file://` 拒绝、Application Context 启动、微信请求互斥、缺失 App、发送失败、OAuth state、取消和重复回调；构建 AAR 与示例 APK；严格 lint；最新稳定模拟器打开真实系统分享面板。
+- 微信官方 Android SDK 的部分 class 文件未包含标准 JVM 要求的 StackMap frames，相关回调测试运行在 Android ART 模拟器上，不通过禁用 JVM 字节码校验绕过。基础库的 Robolectric 测试仍在 JVM 上运行。
 - iOS：消息转系统分享项、无效链接和文件、可读文件、无效 presenter、真实分享控制器与 iPad 锚点、旧工具方法、无效归档输入、Universal Link 语法、微信 state、请求互斥、取消和重复回调。SDK 传输使用测试替身，不会向微信发真实请求。
 - iOS 独立编译默认 Swift Package，确认基础包不依赖厂商 SDK；编译旧 demo，验证保留接口可构建；`pod lib lint` 验证 Core 与 WeChat 两种集成。
 
