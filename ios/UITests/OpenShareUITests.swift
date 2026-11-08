@@ -2,21 +2,36 @@ import XCTest
 
 final class OpenShareUITests: XCTestCase {
     @MainActor
-    func testSystemShareSheetDisplaysMessage() {
+    func testSystemShareSheetDisplaysLinkAndCompletesCopy() {
         continueAfterFailure = false
         let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
-        defer { app.terminate() }
+        defer {
+            let hierarchy = XCTAttachment(string: app.debugDescription)
+            hierarchy.lifetime = .keepAlways
+            add(hierarchy)
+            app.terminate()
+        }
         let button = app.buttons["openshare.share"]
         XCTAssertTrue(button.waitForExistence(timeout: 10))
-        let sharedContent = app.staticTexts.matching(
-            NSPredicate(format: "label CONTAINS %@", "OpenShare")
-        ).firstMatch
-        XCTAssertFalse(sharedContent.exists)
+        let sheet = app.otherElements["ActivityListView"]
+        XCTAssertFalse(sheet.exists)
         button.tap()
-        XCTAssertTrue(sharedContent.waitForExistence(timeout: 15))
+        XCTAssertTrue(sheet.waitForExistence(timeout: 15))
+        let linkPreview = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label CONTAINS %@", "github.com")
+        ).firstMatch
+        XCTAssertTrue(linkPreview.waitForExistence(timeout: 10))
+        let copy = app.descendants(matching: .any).matching(
+            NSPredicate(format: "label == %@", "Copy")
+        ).firstMatch
+        XCTAssertTrue(copy.waitForExistence(timeout: 10))
         let screenshot = XCTAttachment(screenshot: app.screenshot())
         screenshot.lifetime = .keepAlways
         add(screenshot)
+        copy.tap()
+        let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: sheet)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissed], timeout: 10), .completed)
     }
 }
