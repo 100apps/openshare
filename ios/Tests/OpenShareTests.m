@@ -113,8 +113,11 @@ static BOOL testSendAccepted = YES;
         }] object:nil];
     [self waitForExpectations:@[shown] timeout:5];
     UIPopoverPresentationController *popover = presenter.presentedViewController.popoverPresentationController;
-    XCTAssertEqual(popover.sourceView, presenter.view);
-    XCTAssertTrue(CGRectEqualToRect(popover.sourceRect, presenter.view.bounds));
+    if (presenter.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        XCTAssertNotNil(popover);
+        XCTAssertEqual(popover.sourceView, presenter.view);
+        XCTAssertTrue(CGRectEqualToRect(popover.sourceRect, presenter.view.bounds));
+    }
     UIImage *screenshot = [OpenShare screenshot];
     XCTAssertNotNil(screenshot);
     if (screenshot) {
