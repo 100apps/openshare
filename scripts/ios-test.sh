@@ -14,10 +14,11 @@ for family in ['iPhone', 'iPad']:
     print(found)
 PY
 while IFS= read -r simulator; do
+  xcrun simctl bootstatus "$simulator" -b
   xcodebuild test -project ios/OpenShareCI.xcodeproj -scheme OpenShareCI \
-    -destination "platform=iOS Simulator,id=$simulator" \
+    -destination "platform=iOS Simulator,id=$simulator,arch=$(uname -m)" \
     -resultBundlePath ".build/tests-$simulator.xcresult" \
     -test-timeouts-enabled YES -default-test-execution-time-allowance 60 \
     -maximum-test-execution-time-allowance 120 \
-    CODE_SIGNING_ALLOWED=NO
+    CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=-
 done < .build/simulator-ids
