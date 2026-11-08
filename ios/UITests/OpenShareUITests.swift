@@ -3,6 +3,9 @@ import XCTest
 final class OpenShareUITests: XCTestCase {
     @MainActor
     func testSystemShareSheetDisplaysLinkAndCompletesCopy() {
+        // A fresh hosted simulator must launch both the app and the system share
+        // extension. Keep bounded waits for each assertion within this budget.
+        executionTimeAllowance = 120
         continueAfterFailure = false
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
