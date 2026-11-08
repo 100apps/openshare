@@ -36,3 +36,4 @@ Pods/
 *.xcresult
 ios/OpenShareCI.xcodeproj/
 ios/Sample/Info.plist
+__pycache__/

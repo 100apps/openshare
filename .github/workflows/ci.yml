@@ -72,7 +72,7 @@ jobs:
         run: xcodebuild -version && xcodebuild -showsdks
       - name: Download Apple iOS 27.2 runtime
         if: matrix.runner == 'xcode-27'
-        run: xcodebuild -downloadPlatform iOS -buildVersion 24B8117 -architectureVariant arm64
+        run: python3 scripts/ensure-ios-runtime.py
       - name: Install project generator
         run: brew install xcodegen
       - name: Download pinned official WeChat SDK
