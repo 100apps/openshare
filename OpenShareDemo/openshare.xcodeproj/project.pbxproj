@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A00000000000000000000001 /* OpenShare+System.m in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000002; };
 		B66BF3B31B0C137E0082F8D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B21B0C137E0082F8D6 /* main.m */; };
 		B66BF3B61B0C137E0082F8D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B51B0C137E0082F8D6 /* AppDelegate.m */; };
 		B66BF3B91B0C137E0082F8D6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B81B0C137E0082F8D6 /* ViewController.m */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A00000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OpenShare+System.m"; sourceTree = "<group>"; };
+		A00000000000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OpenShare+System.h"; sourceTree = "<group>"; };
 		B66BF3AD1B0C137E0082F8D6 /* openshare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openshare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B66BF3B11B0C137E0082F8D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B66BF3B21B0C137E0082F8D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -167,6 +170,8 @@
 		B66BF3E11B0C16290082F8D6 /* OpenShare */ = {
 			isa = PBXGroup;
 			children = (
+				A00000000000000000000002,
+				A00000000000000000000003,
 				B66BF3E21B0C16290082F8D6 /* OpenShare+QQ.h */,
 				B66BF3E31B0C16290082F8D6 /* OpenShare+QQ.m */,
 				B66BF3E41B0C16290082F8D6 /* OpenShare+Renren.h */,
@@ -182,7 +187,7 @@
 				B66BF3EC1B0C16290082F8D6 /* OpenShareHeader.h */,
 			);
 			name = OpenShare;
-			path = ../../OpenShare;
+			path = ../../openshare;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,6 +299,7 @@
 				B66BF3EE1B0C16290082F8D6 /* OpenShare+Renren.m in Sources */,
 				B66BF3B61B0C137E0082F8D6 /* AppDelegate.m in Sources */,
 				B66BF3F41B0C1AEB0082F8D6 /* UIControl+Blocks.m in Sources */,
+				A00000000000000000000001 /* OpenShare+System.m in Sources */,
 				B66BF3F11B0C16290082F8D6 /* OpenShare.m in Sources */,
 				B66BF3B31B0C137E0082F8D6 /* main.m in Sources */,
 				B66BF3EF1B0C16290082F8D6 /* OpenShare+Weibo.m in Sources */,
@@ -372,7 +378,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -412,7 +418,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -427,7 +433,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = UXQ4US7LL6;
 				INFOPLIST_FILE = openshare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "us.gfzj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -441,7 +447,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = UXQ4US7LL6;
 				INFOPLIST_FILE = openshare/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "us.gfzj.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1,0 +1,58 @@
+name: OpenShareCI
+options:
+  deploymentTarget:
+    iOS: '13.0'
+settings:
+  base:
+    CODE_SIGNING_ALLOWED: NO
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    GENERATE_INFOPLIST_FILE: YES
+targets:
+  OpenShare:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../openshare
+        headerVisibility: public
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShare
+        OTHER_LDFLAGS: ['$(inherited)', '-ObjC']
+  OpenShareWeChat:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../adapters/ios
+        headerVisibility: public
+    dependencies:
+      - target: OpenShare
+      - framework: ../.build/WechatOpenSDK.xcframework
+        embed: false
+      - sdk: Security.framework
+      - sdk: WebKit.framework
+      - sdk: libz.tbd
+      - sdk: libsqlite3.tbd
+      - sdk: libc++.tbd
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareWeChat
+        OTHER_LDFLAGS: ['$(inherited)', '-ObjC']
+  OpenShareTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: OpenShare
+      - target: OpenShareWeChat
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareTests
+schemes:
+  OpenShareCI:
+    build:
+      targets:
+        OpenShare: all
+        OpenShareWeChat: all
+    test:
+      targets: [OpenShareTests]

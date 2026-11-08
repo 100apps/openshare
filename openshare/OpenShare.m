@@ -50,10 +50,15 @@ static NSMutableDictionary *keys;
 }
 
 +(void)openURL:(NSString*)url{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    NSURL *target = [NSURL URLWithString:url];
+    if (!target.scheme.length) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] openURL:target options:@{} completionHandler:nil];
+    });
 }
 +(BOOL)canOpen:(NSString*)url{
-    return [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]];
+    NSURL *target = [NSURL URLWithString:url];
+    return target.scheme.length && [[UIApplication sharedApplication] canOpenURL:target];
 }
 +(BOOL)handleOpenURL:(NSURL*)openUrl{
     returnedURL=openUrl;
@@ -184,13 +189,14 @@ static OSMessage *message;
 +(void)setGeneralPasteboard:(NSString*)key Value:(NSDictionary*)value encoding:(OSPboardEncoding)encoding{
     if (value&&key) {
         NSData *data=nil;
-        NSError *err;
+        NSError *err = nil;
         switch (encoding) {
             case OSPboardEncodingKeyedArchiver:
                 data=[NSKeyedArchiver archivedDataWithRootObject:value];
                 break;
             case OSPboardEncodingPropertyListSerialization:
                 data=[NSPropertyListSerialization dataWithPropertyList:value format:NSPropertyListBinaryFormat_v1_0 options:0 error:&err];
+                break;
             default:
                 NSLog(@"encoding not implemented");
                 break;
@@ -206,16 +212,20 @@ static OSMessage *message;
     NSData *data=[[UIPasteboard generalPasteboard] dataForPasteboardType:key];
     NSDictionary *dic=nil;
     if (data) {
-        NSError *err;
-        switch (encoding) {
+        NSError *err = nil;
+        @try { switch (encoding) {
             case OSPboardEncodingKeyedArchiver:
-                dic= [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                dic = [NSKeyedUnarchiver unarchivedObjectOfClasses:
+                       [NSSet setWithObjects:NSDictionary.class, NSArray.class, NSString.class,
+                        NSNumber.class, NSData.class, NSDate.class, NSNull.class, nil]
+                                                       fromData:data error:&err];
                 break;
             case OSPboardEncodingPropertyListSerialization:
                 dic=[NSPropertyListSerialization propertyListWithData:data options:0 format:0 error:&err];
             default:
                 break;
-        }
+        } } @catch (NSException *exception) { return nil; }
+        if (![dic isKindOfClass:NSDictionary.class]) return nil;
         if (err) {
             NSLog(@"error when NSPropertyListSerialization: %@",err);
         }
@@ -226,7 +236,7 @@ static OSMessage *message;
     return  [[self base64Encode:string] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 }
 +(NSString*)urlDecode:(NSString*)input{
-   return [[input stringByReplacingOccurrencesOfString:@"+" withString:@" "]stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   return [[input stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByRemovingPercentEncoding];
 }
 /**
  *  截屏功能。via：http://stackoverflow.com/a/8017292/3825920
@@ -235,43 +245,23 @@ static OSMessage *message;
  */
 + (UIImage *)screenshot
 {
-    CGSize imageSize = CGSizeZero;
-    
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    if (UIInterfaceOrientationIsPortrait(orientation)) {
-        imageSize = [UIScreen mainScreen].bounds.size;
-    } else {
-        imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-    }
-    
-    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
-        CGContextSaveGState(context);
-        CGContextTranslateCTM(context, window.center.x, window.center.y);
-        CGContextConcatCTM(context, window.transform);
-        CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
-        if (orientation == UIInterfaceOrientationLandscapeLeft) {
-            CGContextRotateCTM(context, M_PI_2);
-            CGContextTranslateCTM(context, 0, -imageSize.width);
-        } else if (orientation == UIInterfaceOrientationLandscapeRight) {
-            CGContextRotateCTM(context, -M_PI_2);
-            CGContextTranslateCTM(context, -imageSize.height, 0);
-        } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-            CGContextRotateCTM(context, M_PI);
-            CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
+    UIWindow *window = [self activeWindow];
+    if (!window || !NSThread.isMainThread) return nil;
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithBounds:window.bounds];
+    return [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
+    }];
+}
+
++ (UIWindow *)activeWindow {
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:UIWindowScene.class]) {
+            for (UIWindow *window in ((UIWindowScene *)scene).windows) {
+                if (window.isKeyWindow) return window;
+            }
         }
-        if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
-            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
-        } else {
-            [window.layer renderInContext:context];
-        }
-        CGContextRestoreGState(context);
     }
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
+    return nil;
 }
 
 + (NSData *)dataWithImage:(UIImage *)image {
@@ -279,11 +269,11 @@ static OSMessage *message;
 }
 
 + (NSData *)dataWithImage:(UIImage *)image scale:(CGSize)size {
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0,0, size.width, size.height)];
-    UIImage* scaledImage =UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return UIImageJPEGRepresentation(scaledImage, 1);
+    if (!image || size.width <= 0 || size.height <= 0) return nil;
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size];
+    return [renderer JPEGDataWithCompressionQuality:1 actions:^(UIGraphicsImageRendererContext *context) {
+        [image drawInRect:(CGRect){CGPointZero, size}];
+    }];
 }
 
 - (UIImage *)scaleImage:(UIImage *)image toSize:(CGSize)size{
@@ -348,7 +338,7 @@ static OSMessage *message;
     [webView.scrollView addSubview:indicator];
     [indicator startAnimating];
     
-    [[UIApplication sharedApplication].keyWindow addSubview:webView];
+    [[[self class] activeWindow] addSubview:webView];
     [UIView animateWithDuration:0.32 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         webView.frame = CGRectMake(0, 20, webView.frame.size.width, webView.frame.size.height);
     } completion:nil];

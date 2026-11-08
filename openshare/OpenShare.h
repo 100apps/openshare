@@ -41,6 +41,8 @@ typedef enum : NSUInteger {
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
 @property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
+/// A readable local file for the system share sheet. The caller owns its lifetime.
+@property (nonatomic, copy) NSURL *fileURL;
 //for 微信小程序
 @property NSString* path;
 @property BOOL withShareTicket;

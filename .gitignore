@@ -25,3 +25,13 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 #Pods/
+
+# Android / Swift Package Manager
+.gradle/
+.kotlin/
+local.properties
+.build/
+.swiftpm/
+Pods/
+*.xcresult
+ios/OpenShareCI.xcodeproj/

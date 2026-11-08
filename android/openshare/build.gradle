@@ -1,0 +1,16 @@
+plugins { id 'com.android.library' }
+android {
+    namespace 'us.gfzj.openshare'
+    compileSdk { version = release(37) { minorApiLevel = 2 } }
+    defaultConfig { minSdk 23 }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions { unitTests.includeAndroidResources = true }
+    lint { abortOnError true; warningsAsErrors true }
+}
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.17'
+}

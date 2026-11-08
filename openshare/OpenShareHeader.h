@@ -8,6 +8,7 @@
 
 #ifndef openshare_OpenShareHeader_h
 #define openshare_OpenShareHeader_h
+#import "OpenShare+System.h"
 #import "OpenShare+QQ.h"
 #import "OpenShare+Weibo.h"
 #import "OpenShare+Weixin.h"

@@ -31,13 +31,13 @@
     [self.window makeKeyAndVisible];
     return YES;
 }
--(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
     //第二步：添加回调
     if ([OpenShare handleOpenURL:url]) {
         return YES;
     }
     //这里可以写上其他OpenShare不支持的客户端的回调，比如支付宝等。
-    return YES;
+    return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
