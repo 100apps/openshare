@@ -44,7 +44,7 @@ message.link = @"https://github.com/100apps/openshare";
 
 Swift 中同样可以 `import OpenShare`，调用 `OpenShare.share(message, from: self, sourceView: button, completion: nil)`。构建分享项而不展示 UI 时使用 `try OpenShare.systemActivityItems(for: message)`。
 
-旧 Objective-C API 仍可编译；最低 iOS 版本提升到了 13。历史接入说明见[旧版文档](docs/legacy-ios.md)，其中私有协议、示例 App ID 和商户配置不应直接用于新应用。
+旧 Objective-C API 仍可编译；最低 iOS 版本提升到了 15。历史接入说明见[旧版文档](docs/legacy-ios.md)，其中私有协议、示例 App ID 和商户配置不应直接用于新应用。
 
 ## Android
 
@@ -93,7 +93,7 @@ xcodegen generate --spec ios/project.yml
 bash scripts/ios-test.sh
 ```
 
-[GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括下载 iOS 27.2 正式运行时。runner 的 27.2 工具链目前是 RC build，详情见[验证边界](docs/modernization.md)。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
+[GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括核对及按需下载 iOS 27.2 正式运行时。runner 的 27.2 工具链目前是 RC build，详情见[验证边界](docs/modernization.md)。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
 
 ## 许可
 

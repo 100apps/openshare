@@ -54,7 +54,8 @@ while IFS= read -r simulator; do
     -test-timeouts-enabled YES -default-test-execution-time-allowance 60 \
     -maximum-test-execution-time-allowance 120 \
     CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- </dev/null
-  if [[ -n "${OPENSHARE_IOS_RUNTIME:-}" ]]; then
+  # Hosted runners have limited memory; release the tested phone before booting the iPad.
+  if [[ "${CI:-}" == "true" || -n "${OPENSHARE_IOS_RUNTIME:-}" ]]; then
     xcrun simctl shutdown "$simulator" >/dev/null 2>&1 || true
   fi
 done < .build/simulator-ids
