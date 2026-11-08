@@ -12,7 +12,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 - (instancetype)initWithAppID:(NSString *)appID universalLink:(NSString *)universalLink {
     NSURL *url = [NSURL URLWithString:universalLink];
     if (!appID.length || ![url.scheme isEqualToString:@"https"] || !url.host.length ||
-        ![url.path hasSuffix:@"/"] || url.query || url.fragment || url.user || url.password) return nil;
+        ![url.absoluteString hasSuffix:@"/"] || url.query || url.fragment || url.user || url.password) return nil;
     self = [super init];
     if (self && ![WXApi registerApp:appID universalLink:universalLink]) return nil;
     return self;

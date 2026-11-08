@@ -88,19 +88,23 @@ static BOOL testSendAccepted = YES;
     XCTAssertTrue(called);
 }
 - (void)testSystemSharePresentsWithPopoverAnchor {
-    UIWindow *window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    UIWindow *window = nil;
     for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
         if ([scene isKindOfClass:UIWindowScene.class] && scene.activationState == UISceneActivationStateForegroundActive) {
-            window = [[UIWindow alloc] initWithWindowScene:(UIWindowScene *)scene];
-            break;
+            for (UIWindow *candidate in ((UIWindowScene *)scene).windows) {
+                if (candidate.isKeyWindow) window = candidate;
+            }
         }
     }
-    UIViewController *presenter = [UIViewController new];
-    window.rootViewController = presenter;
-    [window makeKeyAndVisible];
+    XCTAssertNotNil(window, @"The sample host must have an active scene window.");
+    UIViewController *presenter = window.rootViewController;
+    XCTAssertNotNil(presenter.view.window);
     OSMessage *message = [OSMessage new];
     message.title = @"OpenShare";
-    [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view completion:nil];
+    __block NSError *presentationError = nil;
+    [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view
+                completion:^(BOOL completed, NSError *error) { presentationError = error; }];
+    XCTAssertNil(presentationError);
     XCTAssertTrue([presenter.presentedViewController isKindOfClass:UIActivityViewController.class]);
     XCTNSPredicateExpectation *shown = [[XCTNSPredicateExpectation alloc]
         initWithPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
@@ -119,7 +123,6 @@ static BOOL testSendAccepted = YES;
         [self addAttachment:attachment];
     }
     [presenter dismissViewControllerAnimated:NO completion:nil];
-    window.hidden = YES;
 }
 - (void)testLegacyHelpersRejectBadData {
     XCTAssertNil([OpenShare dataWithImage:nil scale:CGSizeZero]);
@@ -138,7 +141,11 @@ static BOOL testSendAccepted = YES;
     XCTAssertNil([[OSWeChat alloc] initWithAppID:@"wx-test" universalLink:@"http://example.com/wx/"]);
     XCTAssertNil([[OSWeChat alloc] initWithAppID:@"wx-test" universalLink:@"https://example.com/wx"]);
 }
-- (OSWeChat *)client { return [[OSWeChat alloc] initWithAppID:@"wx-test" universalLink:@"https://example.com/wx/"]; }
+- (OSWeChat *)client {
+    OSWeChat *client = [[OSWeChat alloc] initWithAppID:@"wx-test" universalLink:@"https://example.com/wx/"];
+    XCTAssertNotNil(client, @"A valid HTTPS Universal Link must register successfully.");
+    return client;
+}
 - (void)testWeChatChecksAuthStateAndCompletesOnce {
     OSWeChat *client = [self client];
     __block NSInteger count = 0;

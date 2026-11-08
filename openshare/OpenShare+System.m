@@ -69,7 +69,7 @@ NSErrorDomain const OSSystemShareErrorDomain = @"us.gfzj.openshare.system";
         return;
     }
     if (!presenter.viewIfLoaded.window || presenter.presentedViewController ||
-        !sourceView || ![sourceView isDescendantOfView:presenter.view]) {
+        !sourceView || (sourceView != presenter.view && ![sourceView isDescendantOfView:presenter.view])) {
         if (completion) completion(NO, [NSError errorWithDomain:OSSystemShareErrorDomain
                                                            code:OSSystemShareErrorInvalidPresenter
                                                        userInfo:@{NSLocalizedDescriptionKey: @"A visible presenter and its source view are required."}]);
