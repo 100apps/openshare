@@ -14,8 +14,10 @@ FOUNDATION_EXPORT NSErrorDomain const OSWeChatErrorDomain;
 - (void)shareMessage:(OSMessage *)message scene:(int)scene completion:(OSWeChatCompletion)completion;
 /// Code exchange belongs on your server. The adapter checks a random OAuth state.
 - (void)authorize:(NSString *)scope completion:(OSWeChatCompletion)completion;
-/// Advanced media requests and server-signed PayReq. Use authorize: for OAuth requests.
+/// SendMessageToWXReq (advanced media) or server-signed PayReq. Use authorize: for OAuth.
 - (void)sendRequest:(BaseReq *)request completion:(OSWeChatCompletion)completion;
+/// Releases the callback. The SDK cannot abort an external request; a new request remains
+/// busy until its response arrives, preventing a late response from completing the next share.
 - (void)cancel;
 @end
 NS_ASSUME_NONNULL_END

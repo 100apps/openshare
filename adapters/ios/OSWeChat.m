@@ -71,8 +71,8 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 }
 
 - (void)sendRequest:(BaseReq *)request completion:(OSWeChatCompletion)completion {
-    if ([request isKindOfClass:SendAuthReq.class]) {
-        completion(nil, [self error:1 description:@"Use authorize: for OAuth state validation."]);
+    if (![request isKindOfClass:SendMessageToWXReq.class] && ![request isKindOfClass:PayReq.class]) {
+        completion(nil, [self error:1 description:@"Use a media/payment request, or authorize: for OAuth."]);
         return;
     }
     [self startRequest:request state:nil completion:completion];
@@ -81,7 +81,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 - (void)startRequest:(BaseReq *)request state:(NSString *)state completion:(OSWeChatCompletion)completion {
     NSAssert(NSThread.isMainThread, @"Use OSWeChat on the main thread.");
     if (!request || !completion) return;
-    if (self.pending) { completion(nil, [self error:2 description:@"A request is already pending."]); return; }
+    if (self.pendingRequest) { completion(nil, [self error:2 description:@"A request is already pending."]); return; }
     if (![WXApi isWXAppInstalled]) { completion(nil, [self error:3 description:@"WeChat is not installed."]); return; }
     self.pending = completion;
     self.authState = state;
@@ -99,7 +99,7 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 - (void)onReq:(BaseReq *)request {}
 - (void)onResp:(BaseResp *)response {
     NSAssert(NSThread.isMainThread, @"Handle WeChat responses on the main thread.");
-    if (!self.pending || !response) return;
+    if (!self.pendingRequest || !response) return;
     if ([self.pendingRequest isKindOfClass:SendAuthReq.class]) {
         if (![response isKindOfClass:SendAuthResp.class] ||
             ![self.authState isEqualToString:((SendAuthResp *)response).state]) return;
@@ -126,6 +126,8 @@ NSErrorDomain const OSWeChatErrorDomain = @"us.gfzj.openshare.wechat";
 
 - (void)cancel {
     NSAssert(NSThread.isMainThread, @"Cancel on the main thread.");
-    [self finish:nil error:[self error:WXErrCodeUserCancel description:@"Request cancelled locally."]];
+    OSWeChatCompletion callback = self.pending;
+    self.pending = nil;
+    if (callback) callback(nil, [self error:WXErrCodeUserCancel description:@"Request cancelled locally."]);
 }
 @end

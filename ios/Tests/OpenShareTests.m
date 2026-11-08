@@ -87,6 +87,21 @@ static BOOL testSendAccepted = YES;
     }];
     XCTAssertTrue(called);
 }
+- (void)testSystemSharePresentsWithPopoverAnchor {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    UIViewController *presenter = [UIViewController new];
+    window.rootViewController = presenter;
+    [window makeKeyAndVisible];
+    OSMessage *message = [OSMessage new];
+    message.title = @"OpenShare";
+    [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view completion:nil];
+    XCTAssertTrue([presenter.presentedViewController isKindOfClass:UIActivityViewController.class]);
+    UIPopoverPresentationController *popover = presenter.presentedViewController.popoverPresentationController;
+    XCTAssertEqual(popover.sourceView, presenter.view);
+    XCTAssertTrue(CGRectEqualToRect(popover.sourceRect, presenter.view.bounds));
+    [presenter dismissViewControllerAnimated:NO completion:nil];
+    window.hidden = YES;
+}
 - (void)testLegacyHelpersRejectBadData {
     XCTAssertNil([OpenShare dataWithImage:nil scale:CGSizeZero]);
     XCTAssertEqualObjects([OpenShare urlDecode:@"%E4%BD%A0%E5%A5%BD+a%2Bb"], @"你好 a+b");
@@ -124,6 +139,11 @@ static BOOL testSendAccepted = YES;
     [client authorize:@"snsapi_userinfo" completion:^(BaseResp *response, NSError *error) { XCTAssertEqual(error.code, 2); }];
     [client cancel];
     [client cancel];
+    XCTAssertEqual(count, 1);
+    [client authorize:@"snsapi_userinfo" completion:^(BaseResp *response, NSError *error) { XCTAssertEqual(error.code, 2); }];
+    SendAuthResp *late = [SendAuthResp new];
+    late.state = ((SendAuthReq *)sentRequest).state;
+    [client onResp:late];
     XCTAssertEqual(count, 1);
 }
 @end

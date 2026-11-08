@@ -14,13 +14,12 @@ jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
         with:
           validate-wrappers: true
       - name: Install stable Android SDK
@@ -28,7 +27,21 @@ jobs:
       - name: Test, lint and build libraries and sample
         working-directory: android
         run: ./gradlew test lint assembleDebug --stacktrace
-      - uses: actions/upload-artifact@v4
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run on latest stable Android with 16 KB pages
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: '37.2'
+          target: google_apis_ps16k
+          arch: x86_64
+          profile: pixel_6
+          working-directory: android
+          script: ./gradlew :sample:connectedDebugAndroidTest
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: android-reports-and-builds
@@ -43,7 +56,7 @@ jobs:
         runner: [macos-15, macos-26]
     runs-on: ${{ matrix.runner }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Record Xcode and available SDKs
         run: xcodebuild -version && xcodebuild -showsdks
       - name: Install project generator
@@ -62,7 +75,7 @@ jobs:
         run: |
           pod lib lint OpenShare.podspec --subspec=Core --allow-warnings
           pod lib lint OpenShare.podspec --subspec=WeChat --allow-warnings
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: ios-results-${{ matrix.runner }}
