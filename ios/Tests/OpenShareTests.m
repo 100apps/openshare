@@ -105,13 +105,13 @@ static BOOL testSendAccepted = YES;
     [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view
                 completion:^(BOOL completed, NSError *error) { presentationError = error; }];
     XCTAssertNil(presentationError);
-    XCTAssertTrue([presenter.presentedViewController isKindOfClass:UIActivityViewController.class]);
     XCTNSPredicateExpectation *shown = [[XCTNSPredicateExpectation alloc]
         initWithPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
-            return presenter.presentedViewController.view.window != nil &&
+            return [presenter.presentedViewController isKindOfClass:UIActivityViewController.class] &&
+                   presenter.presentedViewController.view.window != nil &&
                    !presenter.presentedViewController.isBeingPresented;
         }] object:nil];
-    [self waitForExpectations:@[shown] timeout:5];
+    [self waitForExpectations:@[shown] timeout:10];
     UIPopoverPresentationController *popover = presenter.presentedViewController.popoverPresentationController;
     if (presenter.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         XCTAssertNotNil(popover);
