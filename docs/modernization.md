@@ -26,7 +26,7 @@ iOS 15 下限对应 Xcode 27.2 的受支持部署范围。CocoaPods 验证显式
 
 依赖版本可在后续 PR 升级；CI 不使用 `+`、`latest.release` 或未验证的动态 SDK 版本。
 
-2026-11-08 对照 [Apple 发布列表](https://developer.apple.com/news/releases/) 核对，当前正式版为 iOS 27.2 / Xcode 27.2，27.3 是 beta。GitHub `xcode-27` 镜像当前提供 Xcode 27.2 RC（27B48）；Apple 正式 Xcode 是 27B52，下载完整工具链需要开发者登录。本 CI 如实记录 runner 的编译器 build，并通过 Apple 的 `xcodebuild -downloadPlatform` 下载 iOS 27.2 正式运行时（Apple simulator catalog 的标准设备 build `24B8117`，区别于设备固件 build），创建对应的 iPhone / iPad 设备运行测试；不把 RC 工具链写成正式工具链验证。
+2026-11-08 对照 [Apple 发布列表](https://developer.apple.com/news/releases/) 核对，当前正式版为 iOS 27.2 / Xcode 27.2，27.3 是 beta。CI 已在 GitHub `xcode-27` 镜像的正式 Xcode 27.2（27B52）上通过验证；日志记录每次 runner 实际提供的编译器 build。运行前核对 Apple 正式 iOS 27.2 模拟器运行时（Apple simulator catalog 的标准设备 build `24B8117`，区别于设备固件 build），缺少时通过 Apple 的 `xcodebuild -downloadPlatform` 安装，随后创建对应的 iPhone / iPad 设备运行测试。
 
 ## 自动化覆盖
 

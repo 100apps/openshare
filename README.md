@@ -93,7 +93,7 @@ xcodegen generate --spec ios/project.yml
 bash scripts/ios-test.sh
 ```
 
-[GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括核对及按需下载 iOS 27.2 正式运行时。runner 的 27.2 工具链目前是 RC build，详情见[验证边界](docs/modernization.md)。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
+[GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括使用正式 Xcode 27.2、核对及按需下载 iOS 27.2 正式运行时。实际工具链版本与[验证边界](docs/modernization.md)均有记录。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
 
 ## 许可
 
