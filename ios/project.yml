@@ -8,6 +8,7 @@ settings:
     CLANG_ENABLE_MODULES: YES
     CLANG_ENABLE_OBJC_ARC: YES
     GENERATE_INFOPLIST_FILE: YES
+    SWIFT_VERSION: '5.0'
 targets:
   OpenShareSample:
     type: application
@@ -37,6 +38,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShare
+        MODULEMAP_FILE: '$(SRCROOT)/OpenShare.modulemap'
         OTHER_LDFLAGS: ['$(inherited)', '-ObjC']
   OpenShareWeChat:
     type: framework

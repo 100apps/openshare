@@ -146,6 +146,8 @@ typedef enum : NSUInteger {
 
 +(void)setGeneralPasteboard:(NSString*)key Value:(NSDictionary*)value encoding:(OSPboardEncoding)encoding;
 +(NSDictionary*)generalPasteboardData:(NSString*)key encoding:(OSPboardEncoding)encoding;
+/// Decode an untrusted payload without accessing the system pasteboard. Only Foundation containers are allowed.
++(NSDictionary*)decodePasteboardData:(NSData*)data encoding:(OSPboardEncoding)encoding;
 +(NSString*)base64AndUrlEncode:(NSString *)string;
 +(NSString*)urlDecode:(NSString*)input;
 + (UIImage *)screenshot;

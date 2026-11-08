@@ -42,6 +42,8 @@ message.link = @"https://github.com/100apps/openshare";
 
 在主线程、可见页面调用。图片用 `message.image`；文件用 `message.fileURL`，文件必须可读并保留到分享结束。系统入口不会使用旧的 `message.file` 二进制数据或小程序私有协议。系统分享无需注册 App ID 或配置 URL Scheme。
 
+Swift 中同样可以 `import OpenShare`，调用 `OpenShare.share(message, from: self, sourceView: button, completion: nil)`。构建分享项而不展示 UI 时使用 `try OpenShare.systemActivityItems(for: message)`。
+
 旧 Objective-C API 仍可编译；最低 iOS 版本提升到了 13。历史接入说明见[旧版文档](docs/legacy-ios.md)，其中私有协议、示例 App ID 和商户配置不应直接用于新应用。
 
 ## Android

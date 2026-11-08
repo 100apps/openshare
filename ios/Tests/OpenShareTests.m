@@ -102,20 +102,37 @@ static BOOL testSendAccepted = YES;
     message.title = @"OpenShare";
     [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view completion:nil];
     XCTAssertTrue([presenter.presentedViewController isKindOfClass:UIActivityViewController.class]);
+    XCTNSPredicateExpectation *shown = [[XCTNSPredicateExpectation alloc]
+        initWithPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+            return presenter.presentedViewController.view.window != nil &&
+                   !presenter.presentedViewController.isBeingPresented;
+        }] object:nil];
+    [self waitForExpectations:@[shown] timeout:5];
     UIPopoverPresentationController *popover = presenter.presentedViewController.popoverPresentationController;
     XCTAssertEqual(popover.sourceView, presenter.view);
     XCTAssertTrue(CGRectEqualToRect(popover.sourceRect, presenter.view.bounds));
+    UIImage *screenshot = [OpenShare screenshot];
+    XCTAssertNotNil(screenshot);
+    if (screenshot) {
+        XCTAttachment *attachment = [XCTAttachment attachmentWithImage:screenshot];
+        attachment.lifetime = XCTAttachmentLifetimeKeepAlways;
+        [self addAttachment:attachment];
+    }
     [presenter dismissViewControllerAnimated:NO completion:nil];
     window.hidden = YES;
 }
 - (void)testLegacyHelpersRejectBadData {
     XCTAssertNil([OpenShare dataWithImage:nil scale:CGSizeZero]);
     XCTAssertEqualObjects([OpenShare urlDecode:@"%E4%BD%A0%E5%A5%BD+a%2Bb"], @"你好 a+b");
-    NSString *key = @"us.gfzj.openshare.test";
-    [[UIPasteboard generalPasteboard] setData:[@"invalid" dataUsingEncoding:NSUTF8StringEncoding] forPasteboardType:key];
-    XCTAssertNil([OpenShare generalPasteboardData:key encoding:OSPboardEncodingKeyedArchiver]);
-    [OpenShare setGeneralPasteboard:key Value:@{@"code": @0} encoding:OSPboardEncodingPropertyListSerialization];
-    XCTAssertEqualObjects([OpenShare generalPasteboardData:key encoding:OSPboardEncodingPropertyListSerialization], @{@"code": @0});
+    // Test untrusted decoding without the simulator's host-clipboard daemon.
+    XCTAssertNil([OpenShare decodePasteboardData:[@"invalid" dataUsingEncoding:NSUTF8StringEncoding] encoding:OSPboardEncodingKeyedArchiver]);
+    NSData *plist = [NSPropertyListSerialization dataWithPropertyList:@{@"code": @0}
+        format:NSPropertyListBinaryFormat_v1_0 options:0 error:nil];
+    XCTAssertEqualObjects([OpenShare decodePasteboardData:plist encoding:OSPboardEncodingPropertyListSerialization], @{@"code": @0});
+    NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:@{@"code": @0} requiringSecureCoding:YES error:nil];
+    XCTAssertEqualObjects([OpenShare decodePasteboardData:archive encoding:OSPboardEncodingKeyedArchiver], @{@"code": @0});
+    NSData *arrayArchive = [NSKeyedArchiver archivedDataWithRootObject:@[@"invalid-root"] requiringSecureCoding:YES error:nil];
+    XCTAssertNil([OpenShare decodePasteboardData:arrayArchive encoding:OSPboardEncodingKeyedArchiver]);
 }
 - (void)testWeChatRejectsInsecureUniversalLinks {
     XCTAssertNil([[OSWeChat alloc] initWithAppID:@"wx-test" universalLink:@"http://example.com/wx/"]);
@@ -164,5 +181,31 @@ static BOOL testSendAccepted = YES;
     response.state = ((SendAuthReq *)sentRequest).state;
     [client onResp:response];
     XCTAssertTrue(called);
+}
+- (void)testWeChatShareWaitsForSDKResponseAndPreservesCancellation {
+    OSWeChat *client = [self client];
+    OSMessage *message = [OSMessage new];
+    message.title = @"Hello";
+    __block NSInteger count = 0;
+    [client shareMessage:message scene:WXSceneSession completion:^(BaseResp *response, NSError *error) {
+        count++;
+        XCTAssertEqual(error.code, WXErrCodeUserCancel);
+    }];
+    XCTAssertEqual(count, 0); // Transport acceptance must never be reported as share success.
+    SendMessageToWXResp *response = [SendMessageToWXResp new];
+    response.errCode = WXErrCodeUserCancel;
+    [client onResp:response];
+    [client onResp:response];
+    XCTAssertEqual(count, 1);
+}
+- (void)testWeChatReportsAsynchronousDispatchFailure {
+    OSWeChat *client = [self client];
+    testSendAccepted = NO;
+    XCTestExpectation *failed = [self expectationWithDescription:@"SDK dispatch failed"];
+    [client authorize:@"snsapi_userinfo" completion:^(BaseResp *response, NSError *error) {
+        XCTAssertEqual(error.code, 4);
+        [failed fulfill];
+    }];
+    [self waitForExpectations:@[failed] timeout:5];
 }
 @end

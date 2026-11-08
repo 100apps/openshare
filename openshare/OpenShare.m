@@ -50,6 +50,7 @@ static NSMutableDictionary *keys;
 }
 
 +(void)openURL:(NSString*)url{
+    if (!url.length) return;
     NSURL *target = [NSURL URLWithString:url];
     if (!target.scheme.length) return;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -57,6 +58,7 @@ static NSMutableDictionary *keys;
     });
 }
 +(BOOL)canOpen:(NSString*)url{
+    if (!url.length) return NO;
     NSURL *target = [NSURL URLWithString:url];
     return target.scheme.length && [[UIApplication sharedApplication] canOpenURL:target];
 }
@@ -210,6 +212,9 @@ static OSMessage *message;
 }
 +(NSDictionary*)generalPasteboardData:(NSString*)key encoding:(OSPboardEncoding)encoding{
     NSData *data=[[UIPasteboard generalPasteboard] dataForPasteboardType:key];
+    return [self decodePasteboardData:data encoding:encoding];
+}
++(NSDictionary*)decodePasteboardData:(NSData*)data encoding:(OSPboardEncoding)encoding{
     NSDictionary *dic=nil;
     if (data) {
         NSError *err = nil;
@@ -245,8 +250,9 @@ static OSMessage *message;
  */
 + (UIImage *)screenshot
 {
+    if (!NSThread.isMainThread) return nil;
     UIWindow *window = [self activeWindow];
-    if (!window || !NSThread.isMainThread) return nil;
+    if (!window || window.bounds.size.width <= 0 || window.bounds.size.height <= 0) return nil;
     UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithBounds:window.bounds];
     return [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
         [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];

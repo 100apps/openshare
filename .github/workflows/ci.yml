@@ -1,7 +1,7 @@
 name: Mobile CI
 on:
   push:
-    branches: [master, 'codex/**']
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -41,7 +41,10 @@ jobs:
           arch: x86_64
           profile: pixel_6
           working-directory: android
-          script: ./gradlew :sample:connectedDebugAndroidTest :openshare-wechat:connectedDebugAndroidTest
+          script: |
+            adb shell getconf PAGE_SIZE
+            test "$(adb shell getconf PAGE_SIZE | tr -d '\r')" = "16384"
+            ./gradlew :sample:connectedDebugAndroidTest :openshare-wechat:connectedDebugAndroidTest
       - uses: actions/upload-artifact@v7
         if: always()
         with:

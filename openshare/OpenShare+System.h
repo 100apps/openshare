@@ -13,14 +13,17 @@ typedef void (^OSSystemShareCompletion)(BOOL completed, NSError * _Nullable erro
 
 @interface OpenShare (System)
 /// Build items without presenting UI. Returns nil for empty, malformed or unsupported content.
-+ (nullable NSArray *)systemActivityItemsForMessage:(OSMessage *)message error:(NSError **)error;
++ (nullable NSArray *)systemActivityItemsForMessage:(OSMessage *)message
+                                             error:(NSError * _Nullable * _Nullable)error
+    NS_SWIFT_NAME(systemActivityItems(for:));
 
 /// Call on the main thread with a visible presenter and a source view belonging to that presenter.
 /// No platform registration or LSApplicationQueriesSchemes entries are needed.
 + (void)shareMessage:(OSMessage *)message
  fromViewController:(UIViewController *)presenter
          sourceView:(UIView *)sourceView
-         completion:(nullable OSSystemShareCompletion)completion;
+         completion:(nullable OSSystemShareCompletion)completion
+    NS_SWIFT_NAME(share(_:from:sourceView:completion:));
 @end
 
 NS_ASSUME_NONNULL_END
