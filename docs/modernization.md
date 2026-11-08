@@ -18,11 +18,13 @@
 | Java | CI 使用 Temurin JDK 21，源码目标 Java 17 |
 | Robolectric | 4.17；单元测试覆盖 API 23、30、36 |
 | Android 运行测试 | 稳定 `android-37.2;google_apis_ps16k;x86_64`，16 KB 页 |
-| iOS 构建 | GitHub `macos-15` / `macos-26` 默认稳定 Xcode；日志输出实际 Xcode / SDK 版本 |
+| iOS 构建 | GitHub `macos-15` / `macos-26` 默认 Xcode，另用 `xcode-27` 的 27.2 SDK 验证 iOS 27.2；日志输出实际 Xcode / SDK 版本 |
 | 微信 iOS | `WechatOpenSDK-XCFramework` 2.0.9；腾讯下载文件固定 SHA-256 |
 | 微信 Android | Maven Central `com.tencent.mm.opensdk:wechat-sdk-android:6.8.40` |
 
 依赖版本可在后续 PR 升级；CI 不使用 `+`、`latest.release` 或未验证的动态 SDK 版本。
+
+2026-11-08 对照 [Apple 发布列表](https://developer.apple.com/news/releases/) 核对，当前正式版为 iOS 27.2 / Xcode 27.2，27.3 是 beta。GitHub `xcode-27` 镜像当前提供 Xcode 27.2 RC（27B48）；Apple 正式 Xcode 是 27B52，下载完整工具链需要开发者登录。本 CI 如实记录 runner 的编译器 build，并通过 Apple 的 `xcodebuild -downloadPlatform` 下载 iOS 27.2 正式运行时，创建对应的 iPhone / iPad 设备运行测试；不把 RC 工具链写成正式工具链验证。
 
 ## 自动化覆盖
 

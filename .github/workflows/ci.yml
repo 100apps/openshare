@@ -54,16 +54,24 @@ jobs:
             android/**/build/outputs/aar/
             android/sample/build/outputs/apk/debug/
   ios:
-    timeout-minutes: 30
+    timeout-minutes: ${{ matrix.runner == 'xcode-27' && 45 || 30 }}
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-15, macos-26]
+        runner: [macos-15, macos-26, xcode-27]
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
+      - name: Select iOS 27.2 toolchain
+        if: matrix.runner == 'xcode-27'
+        run: |
+          echo 'DEVELOPER_DIR=/Applications/Xcode_27.2.app/Contents/Developer' >> "$GITHUB_ENV"
+          echo 'OPENSHARE_IOS_RUNTIME=27.2' >> "$GITHUB_ENV"
       - name: Record Xcode and available SDKs
         run: xcodebuild -version && xcodebuild -showsdks
+      - name: Download Apple iOS 27.2 runtime
+        if: matrix.runner == 'xcode-27'
+        run: xcodebuild -downloadPlatform iOS -buildVersion 27.2 -architectureVariant arm64
       - name: Install project generator
         run: brew install xcodegen
       - name: Download pinned official WeChat SDK
