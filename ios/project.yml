@@ -1,7 +1,7 @@
 name: OpenShareCI
 options:
   deploymentTarget:
-    iOS: '13.0'
+    iOS: '15.0'
 settings:
   base:
     CODE_SIGNING_ALLOWED: NO

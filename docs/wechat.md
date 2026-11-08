@@ -8,6 +8,21 @@
 pod 'OpenShare/WeChat', :path => '../openshare'
 ```
 
+新版最低 iOS 15。官方微信 Pod 的二进制包仍声明较低的部署版本；用 Xcode 27 构建时，应在宿主 Podfile 的现有 `post_install` 中统一 Pods 的部署下限（保留更高版本的目标）：
+
+```ruby
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      current = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if current && Gem::Version.new(current) < Gem::Version.new('15.0')
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
+    end
+  end
+end
+```
+
 Swift Package 的默认 product 只提供基础库。使用 SPM 的项目可以自行链接官方 XCFramework，再把 `adapters/ios` 加到一个依赖 `OpenShare` 的模块；仓库内 `ios/project.yml` 展示了所需的系统链接库。
 
 在主线程创建并长期保留一个实例：

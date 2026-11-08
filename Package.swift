@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "OpenShare",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v15)],
     products: [.library(name: "OpenShare", targets: ["OpenShare"])],
     targets: [
         .target(name: "OpenShare", path: "openshare", publicHeadersPath: ".",

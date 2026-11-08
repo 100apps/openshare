@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license = { :type => 'GPL v3', :file => 'LICENSE' }
   s.author = { 'Logan' => 'gf@gfzj.us' }
   s.source = { :git => 'https://github.com/100apps/openshare.git', :tag => s.version.to_s }
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   s.requires_arc = true
   s.static_framework = true
   s.default_subspecs = 'Core'

@@ -4,7 +4,9 @@
 
 保留原来的“小消息模型 + 简单调用”思路，新增原生 Android 实现，不引入跨平台 UI 框架。默认分享走系统 API，不需要各厂商 SDK。微信需要 Universal Links、应用签名校验和厂商协议维护，使用可选官方 SDK；不继续把 2015 年剪贴板协议伪装成新系统兼容实现。
 
-原来的 iOS categories 继续保留，CocoaPods 默认 Core 及 Swift Package 都包含它们，以减少源代码迁移成本。系统分享是新增入口，不会把现有定向分享调用静默改成系统分享。新版最低版本为 iOS 13 / Android API 23。
+原来的 iOS categories 继续保留，CocoaPods 默认 Core 及 Swift Package 都包含它们，以减少源代码迁移成本。系统分享是新增入口，不会把现有定向分享调用静默改成系统分享。新版最低版本为 iOS 15 / Android API 23。
+
+iOS 15 下限对应 Xcode 27.2 的受支持部署范围。CocoaPods 验证显式使用同一下限，避免官方 SDK Pod 的历史部署版本阻止构建；宿主工程的配置示例见[微信接入](wechat.md)。
 
 ## 工具链
 

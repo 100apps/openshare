@@ -87,6 +87,8 @@ jobs:
         run: xcodebuild -project OpenShareDemo/openshare.xcodeproj -scheme openshare -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
       - name: Lint CocoaPods core and optional adapter
         run: |
+          echo 'IPHONEOS_DEPLOYMENT_TARGET = 15.0' > "$PWD/.build/pod-lint.xcconfig"
+          export XCODE_XCCONFIG_FILE="$PWD/.build/pod-lint.xcconfig"
           pod lib lint OpenShare.podspec --subspec=Core --allow-warnings
           pod lib lint OpenShare.podspec --subspec=WeChat --allow-warnings
       - uses: actions/upload-artifact@v7

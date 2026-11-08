@@ -6,7 +6,7 @@
 
 这是 `0.1.0` 的开发版本；尚未发布 CocoaPods / Maven 版本或打 release tag。当前可使用仓库分支、本地 Pod 或 Gradle 模块集成。
 
-| 能力 | iOS 13+ | Android 6 / API 23+ |
+| 能力 | iOS 15+ | Android 6 / API 23+ |
 | --- | --- | --- |
 | 系统文本、链接、图片、文件分享 | 支持，兼容 iPhone / iPad | 支持，附件使用 `content://` |
 | 微信定向分享 / 登录 / SDK 支付请求 | 可选官方 SDK 2.0.9 | 可选官方 SDK 6.8.40 |
