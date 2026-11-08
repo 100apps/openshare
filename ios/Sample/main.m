@@ -8,6 +8,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.systemBackgroundColor;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    button.accessibilityIdentifier = @"openshare.share";
     [button setTitle:@"Share / 分享" forState:UIControlStateNormal];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];

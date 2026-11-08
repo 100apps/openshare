@@ -87,46 +87,6 @@ static BOOL testSendAccepted = YES;
     }];
     XCTAssertTrue(called);
 }
-- (void)testSystemSharePresentsWithPopoverAnchor {
-    UIWindow *window = nil;
-    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
-        if ([scene isKindOfClass:UIWindowScene.class] && scene.activationState == UISceneActivationStateForegroundActive) {
-            for (UIWindow *candidate in ((UIWindowScene *)scene).windows) {
-                if (candidate.isKeyWindow) window = candidate;
-            }
-        }
-    }
-    XCTAssertNotNil(window, @"The sample host must have an active scene window.");
-    UIViewController *presenter = window.rootViewController;
-    XCTAssertNotNil(presenter.view.window);
-    OSMessage *message = [OSMessage new];
-    message.title = @"OpenShare";
-    __block NSError *presentationError = nil;
-    [OpenShare shareMessage:message fromViewController:presenter sourceView:presenter.view
-                completion:^(BOOL completed, NSError *error) { presentationError = error; }];
-    XCTAssertNil(presentationError);
-    XCTNSPredicateExpectation *shown = [[XCTNSPredicateExpectation alloc]
-        initWithPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
-            return [presenter.presentedViewController isKindOfClass:UIActivityViewController.class] &&
-                   presenter.presentedViewController.view.window != nil &&
-                   !presenter.presentedViewController.isBeingPresented;
-        }] object:nil];
-    [self waitForExpectations:@[shown] timeout:10];
-    UIPopoverPresentationController *popover = presenter.presentedViewController.popoverPresentationController;
-    if (presenter.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        XCTAssertNotNil(popover);
-        XCTAssertEqual(popover.sourceView, presenter.view);
-        XCTAssertTrue(CGRectEqualToRect(popover.sourceRect, presenter.view.bounds));
-    }
-    UIImage *screenshot = [OpenShare screenshot];
-    XCTAssertNotNil(screenshot);
-    if (screenshot) {
-        XCTAttachment *attachment = [XCTAttachment attachmentWithImage:screenshot];
-        attachment.lifetime = XCTAttachmentLifetimeKeepAlways;
-        [self addAttachment:attachment];
-    }
-    [presenter dismissViewControllerAnimated:NO completion:nil];
-}
 - (void)testLegacyHelpersRejectBadData {
     XCTAssertNil([OpenShare dataWithImage:nil scale:CGSizeZero]);
     XCTAssertEqualObjects([OpenShare urlDecode:@"%E4%BD%A0%E5%A5%BD+a%2Bb"], @"你好 a+b");

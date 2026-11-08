@@ -72,6 +72,16 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareTests
         TEST_HOST: '$(BUILT_PRODUCTS_DIR)/OpenShareSample.app/OpenShareSample'
         BUNDLE_LOADER: '$(TEST_HOST)'
+  OpenShareUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: OpenShareSample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareUITests
+        TEST_TARGET_NAME: OpenShareSample
 schemes:
   OpenShareCI:
     build:
@@ -80,4 +90,4 @@ schemes:
         OpenShareWeChat: all
         OpenShareSample: all
     test:
-      targets: [OpenShareTests]
+      targets: [OpenShareTests, OpenShareUITests]
