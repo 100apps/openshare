@@ -1,192 +1,112 @@
-![](https://github.com/100apps/openshare/raw/gh-pages/images/slogo.png)
+# OpenShare
 
-<p align="center">
-    <a href="https://travis-ci.org/100apps/openshare">
-        <img src="https://img.shields.io/travis/100apps/openshare.svg">
-    </a>
-    <a href="http://cocoapods.org/pods/OpenShare">
-        <img src="https://img.shields.io/cocoapods/v/OpenShare.svg?style=flat">
-    </a>
-    <a href="http://cocoapods.org/pods/OpenShare">
-        <img src="https://img.shields.io/cocoapods/p/OpenShare.svg?style=flat">
-    </a>
-    <a href="https://github.com/100apps/openshare/blob/master/LICENSE">
-        <img src="https://img.shields.io/cocoapods/l/OpenShare.svg?style=flat">
-    </a>
-    <a href="https://twitter.com/thinkphone">
-        <img src="https://img.shields.io/badge/twitter-@thinkphone-blue.svg?style=flat">
-    </a>
-</p>
+[![Mobile CI](https://github.com/100apps/openshare/actions/workflows/ci.yml/badge.svg)](https://github.com/100apps/openshare/actions/workflows/ci.yml)
 
-OpenShare 的功能就是替代官方的 SDK 向各个平台的移动客户端（比如 QQ）发起请求（分享、OAuth），然后接收返回结果。
+极简的原生分享库。iOS 使用 `UIActivityViewController`，Android 使用系统 Sharesheet；基础分享不依赖第三方 SDK。需要指定微信会话、朋友圈、登录或支付时，再按需引入微信官方 SDK 适配器。
 
-OpenShare 非常小，目前支持 QQ、微信、微博、人人，只有几百行代码。即使你不在项目中使用 OpenShare，也可以 clone 下来研究一下 App 和客户端之间的通信机制，所以给个 star 是值得的。
+这是 `0.1.0` 的开发版本；尚未发布 CocoaPods / Maven 版本或打 release tag。当前可使用仓库分支、本地 Pod 或 Gradle 模块集成。
 
-注：为方便书写，如无特殊说明，下文中的「*客户端*」指的是 QQ、微信、微博这样的社交软件官方开发的客户端；「*App*」特指我们自己开发的应用。
+| 能力 | iOS 15+ | Android 6 / API 23+ |
+| --- | --- | --- |
+| 系统文本、链接、图片、文件分享 | 支持，兼容 iPhone / iPad | 支持，附件使用 `content://` |
+| 微信定向分享 / 登录 / SDK 支付请求 | 可选官方 SDK 2.0.9 | 可选官方 SDK 6.8.40 |
+| QQ、微博、人人、支付宝旧协议 | 保留源码与接口；未验证最新客户端 | 没有移植私有协议 |
 
-## 预览
+系统分享的接收方由系统和已安装 App 决定。它不能保证某个 App 出现在列表，也不能替代第三方登录或支付。微信适配器的自动化测试使用真实 SDK 类型、模拟传输；真实登录、支付、Universal Links 和签名配置仍需在你自己的已审核应用中真机验收。详见[兼容性与验证边界](docs/modernization.md)。
 
-![](https://github.com/100apps/openshare/raw/gh-pages/images/demo.gif)
+## 新版统一接口
 
-## 示例
+已按设计实现极简双端 `ShareClient`：系统分享、Telegram/WhatsApp 公开链接、可选微信分享/授权码登录。强类型请求、能力预检、一次性结果回调；新增平台只需实现 Provider。新核心不依赖厂商 SDK。两端示例已使用新入口。
 
-把项目 clone 下来以后，直接 `open OpenShareDemo/openshare.xcodeproj` 就可以运行了。注意 sina 微博的 key 没有通过 sina 的审核，直接分享会提示错误，可以替换成自己的 key。
+接入代码、模块选择、取消/超时与验证范围见 **[OpenShare Next 实现说明](docs/next-sdk/implementation.md)**。下面保留旧兼容 API 的说明。
 
-## 简介
+## iOS
 
-楼主做 iOS 开发的过程中遇到这样的问题：自己 App 中的信息需要分享到 QQ、微信、微博等社交网络。现在的客户端越做越强大，直接集成了分享功能，比如用户手机上安装了微信，只需要 App 调起微信，并且给微信传入相应的参数就可以了，完全不需要自己操作 REST API。这样如果实现分享，一般情况下要去官方下载 SDK，然后按照官方翔一样的 Demo 代码和文档来改造自己的程序。这样做不仅增大了代码量（想象一下引入的官方类库，有时候，光这些第三方的 SDK 都要比我自己的 App 还大），而且使用还很繁琐（SDK 一般没有源代码，想象 Apple 强制 App 支持 64 位的时候）。所以楼主调试了一下各个平台的 SDK，研究了各个厂商实现的应用程序间通信的规则，把功能封装成了 OpenShare。
+Swift Package Manager 添加本仓库，选择 `OpenShare` product。它不包含微信 SDK。
 
-## 设计思路
+CocoaPods 本地集成：
 
-比如分享功能，OpenShare 有一个 OSMessage 类，保存 OpenShare 向客户端发送的消息。分享的消息基本上有以下几种情况：
-
-1. 纯文本
-2. 图片
-3. 链接
-4. 其他格式多媒体（声音、视频、文件等）
-
-这样对应 OSMessage 中的属性：
-
-```objc
-@property NSString* title;
-@property NSString* desc;
-@property NSString* link;
-@property NSData* image;
-@property NSData* thumbnail;
-@property OSMultimediaType multimediaType;
-// for 微信
-@property NSString* extInfo;
-@property NSString* mediaDataUrl;
-@property NSString* fileExt;
+```ruby
+pod 'OpenShare', :path => '../openshare'
+# 需要微信官方 SDK 时，改为：
+# pod 'OpenShare/WeChat', :path => '../openshare'
 ```
 
-比如一个文本消息，可以只设置 title，其他不管；发送一个图片，只需要设置 image / thumbnail / title / desc，其他不用设置。对于其他多媒体消息，可以用 multimediaType 来标示。所以 OSMessage 可以封装所有 App 向客户端发的各类分享请求。
-
-另外，还需要解决的是，客户端分享完成以后回调 App 的功能。我们熟悉的是 block 方法。而不是每个平台都到 application:openURL:sourceApplication:annotation: 中判断。比如最好是这样的：
-
 ```objc
-OSMessage *msg=[[OSMessage alloc] init];
-msg.title=@"Hello World";
-// 分享到微信
-[OpenShare shareToWeixinSession:msg Success:^(OSMessage *message) {
-	ULog(@"微信分享到会话成功：\n%@",message);
-} Fail:^(OSMessage *message, NSError *error) {
-	ULog(@"微信分享到会话失败：\n%@\n%@",error,message);
-}];
-// 分享到QQ
-[OpenShare shareToQQFriends:msg Success:^(OSMessage *message) {
-	ULog(@"分享到QQ好友成功:%@",msg);
-} Fail:^(OSMessage *message, NSError *error) {
-	ULog(@"分享到QQ好友失败:%@\n%@",msg,error);
+#import <OpenShare/OpenShareHeader.h>
+
+OSMessage *message = [OSMessage new];
+message.title = @"Hello OpenShare";
+message.link = @"https://github.com/100apps/openshare";
+[OpenShare shareMessage:message
+    fromViewController:self
+            sourceView:sender  // 当前页面中的 UIView；iPad 弹出位置
+            completion:^(BOOL completed, NSError *error) {
+    // completed 表示所选系统 activity 完成，不是服务器确认发布成功。
 }];
 ```
 
-基于以上考虑，楼主用 category 实现了 OpenShare。
+在主线程、可见页面调用。图片用 `message.image`；文件用 `message.fileURL`，文件必须可读并保留到分享结束。系统入口不会使用旧的 `message.file` 二进制数据或小程序私有协议。系统分享无需注册 App ID 或配置 URL Scheme。
 
-## 如何使用
+Swift 中同样可以 `import OpenShare`，调用 `OpenShare.share(message, from: self, sourceView: button, completion: nil)`。构建分享项而不展示 UI 时使用 `try OpenShare.systemActivityItems(for: message)`。
 
-### 1. 快速集成
+旧 Objective-C API 仍可编译；最低 iOS 版本提升到了 15。历史接入说明见[旧版文档](docs/legacy-ios.md)，其中私有协议、示例 App ID 和商户配置不应直接用于新应用。
 
-OpenShare 已经支持 CocoaPods。所以您可以用：
+## Android
 
-```
-pod 'OpenShare'
-```
+将 `android/openshare` 作为 Gradle library module 加入你的工程：
 
-引入 OpenShare。
-
-*第零步*: 修改 `Info.plist` 添加 `URLSchemes`，让客户端可以回调 App：
-
-```xml
-<!--  OpenShare添加回调urlschemes  -->
-<key>CFBundleURLTypes</key>
-<array>
-    <dict>
-        <key>CFBundleURLName</key>
-        <string>OpenShare</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-            <!--      微信          -->
-            <string>wxd930ea5d5a258f4f</string>
-            <!--       QQ         -->
-            <string>tencent1103194207</string>
-            <string>tencent1103194207.content</string>
-            <string>QQ41C1685F</string>
-            <!--微博-->
-            <string>wb402180334</string>
-            <!--人人-->
-            <string>renrenshare228525</string>
-            <!--facebook-->
-            <string>fb776442542471056</string>
-
-        </array>
-    </dict>
-</array>
+```groovy
+// settings.gradle
+include ':openshare'
+project(':openshare').projectDir = file('../openshare/android/openshare')
+// app/build.gradle
+dependencies { implementation project(':openshare') }
 ```
 
-*第一步*：到 `AppDelegate` 中的 `application:didFinishLaunchingWithOptions:` 中全局注册 AppId / AppKey：
+```java
+OpenShare.share(activity,
+    ShareMessage.text("Hello https://github.com/100apps/openshare"), "Share");
 
-```objc
-// 全局注册appId，别忘了#import "OpenShareHeader.h"
-[OpenShare connectQQWithAppId:@"1103194207"];
-[OpenShare connectWeiboWithAppKey:@"402180334"];
-[OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
-[OpenShare connectRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
+// 图片、视频、PDF 等：URI 来自 FileProvider、MediaStore 或其他可授权的 provider。
+OpenShare.share(activity,
+    ShareMessage.attachment(contentUri, "image/png", "caption"), "Share");
 ```
 
-*第二步*：到`AppDelegate中`的`application:openURL:sourceApplication:annotation:`中添加整体回调：
+不需要存储权限或 `QUERY_ALL_PACKAGES`。调用者负责提供可读且允许临时授权的 URI；不要传入 `file://`。返回 `true` 只说明系统已接收启动请求，不能表示发送成功。Java API 同样可以从 Kotlin 调用。
 
-```objc
-// 如果OpenShare能处理这个回调，就调用block中的方法，如果不能处理，就交给其他（比如支付宝）。
-if ([OpenShare handleOpenURL:url]) {
-	return YES;
-}
+演示应用：用 Android Studio 打开 `android/`，运行 `sample`。它只演示系统分享，未配置任何厂商 App ID。
+
+## 微信官方 SDK（可选）
+
+适配器支持简单文本 / 链接，也允许直接传入 SDK 的媒体请求，以支持图片、音视频、文件和小程序。登录仅返回授权码，令牌交换放在你的服务端；支付仅传递服务端签名的 SDK 请求，支付结果必须由服务端核实。
+
+完整配置、AppDelegate / SceneDelegate 回调以及 Android `WXEntryActivity` 示例见[微信接入](docs/wechat.md)。iOS 必须配置自己的 HTTPS Universal Link 与 AASA；Android 必须匹配开放平台登记的包名与签名。
+
+## 构建和验证
+
+```sh
+# Android：JDK 21、Gradle Wrapper、Android SDK 37.2
+cd android
+./gradlew test lint assembleDebug
+./gradlew :sample:connectedDebugAndroidTest  # 已连接的模拟器 / 设备
 ```
 
-*第三步*：在需要分享、OAuth 的地方调用：
-
-```objc
-// 比如微信登录，其他登录可以参考文档或者代码，或者让Xcode自动提示。
-[OpenShare WeixinAuth:@"snsapi_userinfo" Success:^(NSDictionary *message) {
-	ULog(@"微信登录成功:\n%@",message);
-} Fail:^(NSDictionary *message, NSError *error) {
-	ULog(@"微信登录失败:\n%@\n%@",message,error);
-}];
-//分享纯文本消息到微信朋友圈，其他类型可以参考示例代码
-OSMessage *msg=[[OSMessage alloc]init];
-msg.title=@"Hello msg.title";
-[OpenShare shareToWeixinTimeline:msg Success:^(OSMessage *message) {
-	ULog(@"微信分享到朋友圈成功：\n%@",message);
-} Fail:^(OSMessage *message, NSError *error) {
-	ULog(@"微信分享到朋友圈失败：\n%@\n%@",error,message);
-}];
+```sh
+# iOS：macOS + Xcode + XcodeGen
+bash scripts/download-wechat-ios.sh
+xcodegen generate --spec ios/project.yml
+bash scripts/ios-test.sh
 ```
 
-### 2. 扩展支持更多平台
+[GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括使用正式 Xcode 27.2、核对及按需下载 iOS 27.2 正式运行时。实际工具链版本与[验证边界](docs/modernization.md)均有记录。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
 
-现在的社交网络各种各样，如何把这些平台集成到 OpenShare 中呢？就像插件一样，可以把自己实现的 `OpenShare+foobar.h` 和 `OpenShare+foobar.m` 添加进来就可以了。[这里](http://openshare.gfzj.us/#plugins) 提供了一个模板工具，只需要输入你想扩展的平台的名称，就会自动生成 `.h` 和 `.m` 文件，然后基于这个模板修改即可。
+## 协议调研与设计
 
-## 未完成
+围绕 ShareSDK 与原 OpenShare 的实现，已整理[调研与取舍](docs/research/sharesdk.md)、[协议确认结果](docs/research/protocols.md)、[跨平台 SDK 设计](docs/next-sdk/design.md)及[验证与迁移计划](docs/next-sdk/validation.md)。[来源目录](docs/research/sources.md)记录指定版本、制品哈希和未确认项目。
 
-1. [ ] 没有安装客户端情况下的 fallback
-2. [x] 支付宝和微信支付
-3. [ ] Facebook 和 twitter 等国外社交平台的支持
-4. [ ] ReadMe 国际化
+完整设计包含后续阶段；本轮已落地的 P1 以[实现说明](docs/next-sdk/implementation.md)为准，不代表所有平台已适配或真实登录/发布验收已通过。
 
-## 其它
+## 许可
 
-由于每个厂商的通信协议都不一样，所以 hack 的时候还是走了一些弯路，如果想了解整个实现过程，可以看看我的博客：<http://www.gfzj.us/series/openshare/>
-
-现在行业急需要像 OAuth 一样的标准，来实现 App 和客户端之间的分享，登录。这样就不用为每一个客户端实现一遍了。比如这个协议标准就叫做「OpenShare」（大言不惭、捂脸中）。客户端只需要声明支持 OpenShare 的某个版本，App 就能很简单的调用了。如果您对实现 OpenShare 标准有任何想法，欢迎交流。
-
-## 联系
-
-在 OpenShare 使用过程中有任何问题，都可以添加一个 [issues](issues)，我会及时解决。如果您想贡献代码，欢迎 [Pull Requests](pulls)。其他任何问题可以在下面留言，或者通过邮箱 <gf@gfzj.us> 联系我。
-
-## 协议
-
-<a href="https://github.com/100apps/openshare/blob/master/LICENSE">
-    <img src="https://www.gnu.org/graphics/gplv3-127x51.png">
-</a>
-
-OpenShare 基于 GPLv3 协议进行分发和使用，更多信息参见协议文件。
+OpenShare 保持 [GPLv3](LICENSE)。可选官方 SDK 按各厂商自己的许可提供，不随本仓库提交二进制文件。

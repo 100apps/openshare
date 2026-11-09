@@ -1,0 +1,10 @@
+plugins {
+    id 'com.android.library' version '9.5.1' apply false
+    id 'com.android.application' version '9.5.1' apply false
+}
+subprojects {
+    tasks.withType(Test).configureEach {
+        // Robolectric's Android 16 shared-memory shadow reflects into JDK internals.
+        jvmArgs '--add-opens=java.base/jdk.internal.access=ALL-UNNAMED'
+    }
+}

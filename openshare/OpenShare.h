@@ -41,6 +41,8 @@ typedef enum : NSUInteger {
 @property NSString* mediaDataUrl;
 @property NSString* fileExt;
 @property (nonatomic, strong) NSData *file;   /// 微信分享gif/文件
+/// A readable local file for the system share sheet. The caller owns its lifetime.
+@property (nonatomic, copy) NSURL *fileURL;
 //for 微信小程序
 @property NSString* path;
 @property BOOL withShareTicket;
@@ -144,6 +146,8 @@ typedef enum : NSUInteger {
 
 +(void)setGeneralPasteboard:(NSString*)key Value:(NSDictionary*)value encoding:(OSPboardEncoding)encoding;
 +(NSDictionary*)generalPasteboardData:(NSString*)key encoding:(OSPboardEncoding)encoding;
+/// Decode an untrusted payload without accessing the system pasteboard. Only Foundation containers are allowed.
++(NSDictionary*)decodePasteboardData:(NSData*)data encoding:(OSPboardEncoding)encoding;
 +(NSString*)base64AndUrlEncode:(NSString *)string;
 +(NSString*)urlDecode:(NSString*)input;
 + (UIImage *)screenshot;

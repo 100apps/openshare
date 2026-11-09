@@ -1,0 +1,103 @@
+name: Mobile CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mobile-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          validate-wrappers: true
+      - name: Install stable Android SDK
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.2" "build-tools;37.0.0"'
+      - name: Test, lint and build libraries and sample
+        working-directory: android
+        run: ./gradlew test lint assembleDebug --stacktrace
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run on latest stable Android with 16 KB pages
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: '37.2'
+          target: google_apis_ps16k
+          arch: x86_64
+          profile: pixel_6
+          working-directory: android
+          script: |
+            adb shell getconf PAGE_SIZE
+            test "$(adb shell getconf PAGE_SIZE | tr -d '\r')" = "16384"
+            ./gradlew :sample:connectedDebugAndroidTest :openshare-wechat:connectedDebugAndroidTest
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: android-reports-and-builds
+          path: |
+            android/**/build/reports/
+            android/**/build/outputs/aar/
+            android/sample/build/outputs/apk/debug/
+  ios:
+    timeout-minutes: ${{ matrix.runner == 'xcode-27' && 45 || 30 }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-26, xcode-27]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select iOS 27.2 toolchain
+        if: matrix.runner == 'xcode-27'
+        run: |
+          echo 'DEVELOPER_DIR=/Applications/Xcode_27.2.app/Contents/Developer' >> "$GITHUB_ENV"
+          echo 'OPENSHARE_IOS_RUNTIME=27.2' >> "$GITHUB_ENV"
+          echo 'OPENSHARE_IOS_RUNTIME_BUILD=24B8117' >> "$GITHUB_ENV"
+      - name: Record Xcode and available SDKs
+        run: xcodebuild -version && xcodebuild -showsdks
+      - name: Download Apple iOS 27.2 runtime
+        if: matrix.runner == 'xcode-27'
+        run: python3 scripts/ensure-ios-runtime.py
+      - name: Install project generator
+        run: brew install xcodegen
+      - name: Download pinned official WeChat SDK
+        run: bash scripts/download-wechat-ios.sh
+      - name: Generate test project
+        run: xcodegen generate --spec ios/project.yml
+      - name: Build Swift package without vendor SDKs
+        run: |
+          xcodebuild -scheme OpenShare -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+          xcodebuild -scheme OpenShareNext -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Test on iPhone and iPad
+        run: bash scripts/ios-test.sh
+      - name: Build legacy demo with current SDK
+        run: xcodebuild -project OpenShareDemo/openshare.xcodeproj -scheme openshare -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Lint CocoaPods core and optional adapter
+        run: |
+          echo 'IPHONEOS_DEPLOYMENT_TARGET = 15.0' > "$PWD/.build/pod-lint.xcconfig"
+          export XCODE_XCCONFIG_FILE="$PWD/.build/pod-lint.xcconfig"
+          pod lib lint OpenShare.podspec --subspec=Core --allow-warnings
+          pod lib lint OpenShare.podspec --subspec=WeChat --allow-warnings
+          pod lib lint OpenShare.podspec --subspec=Next --allow-warnings
+          pod lib lint OpenShare.podspec --subspec=NextWeChat --allow-warnings
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: ios-results-${{ matrix.runner }}
+          path: .build/*.xcresult
+          include-hidden-files: true

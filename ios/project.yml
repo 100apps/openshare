@@ -1,0 +1,120 @@
+name: OpenShareCI
+options:
+  deploymentTarget:
+    iOS: '15.0'
+settings:
+  base:
+    CODE_SIGNING_ALLOWED: NO
+    CLANG_ENABLE_MODULES: YES
+    CLANG_ENABLE_OBJC_ARC: YES
+    GENERATE_INFOPLIST_FILE: YES
+    SWIFT_VERSION: '5.0'
+targets:
+  OpenShareCore:
+    type: framework
+    platform: iOS
+    sources: [../next/ios/Core]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareCore
+  OpenShareSystem:
+    type: framework
+    platform: iOS
+    sources: [../next/ios/System]
+    dependencies:
+      - target: OpenShareCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareSystem
+  OpenShareSample:
+    type: application
+    platform: iOS
+    sources: [Sample]
+    dependencies:
+      - target: OpenShare
+      - target: OpenShareSystem
+      - target: OpenShareCore
+    info:
+      path: Sample/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: OSShareSceneDelegate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareSample
+  OpenShare:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../openshare
+        headerVisibility: public
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShare
+        MODULEMAP_FILE: '$(SRCROOT)/OpenShare.modulemap'
+        OTHER_LDFLAGS: ['$(inherited)', '-ObjC']
+  OpenShareWeChat:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../adapters/ios
+        headerVisibility: public
+      - path: ../next/ios/WeChat
+    dependencies:
+      - target: OpenShare
+      - target: OpenShareCore
+      - target: OpenShareSystem
+      - framework: ../.build/WechatOpenSDK.xcframework
+        embed: false
+      - sdk: Security.framework
+      - sdk: WebKit.framework
+      - sdk: libz.tbd
+      - sdk: libsqlite3.tbd
+      - sdk: libc++.tbd
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareWeChat
+        OTHER_LDFLAGS: ['$(inherited)', '-ObjC']
+  OpenShareTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+      - path: ../tests/contracts.json
+        buildPhase: resources
+    dependencies:
+      - target: OpenShareSample
+      - target: OpenShare
+      - target: OpenShareWeChat
+      - target: OpenShareCore
+      - target: OpenShareSystem
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareTests
+        TEST_HOST: '$(BUILT_PRODUCTS_DIR)/OpenShareSample.app/OpenShareSample'
+        BUNDLE_LOADER: '$(TEST_HOST)'
+        SWIFT_OBJC_BRIDGING_HEADER: Tests/Tests-Bridging-Header.h
+  OpenShareUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: OpenShareSample
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareUITests
+        TEST_TARGET_NAME: OpenShareSample
+schemes:
+  OpenShareCI:
+    build:
+      targets:
+        OpenShare: all
+        OpenShareWeChat: all
+        OpenShareSample: all
+    test:
+      targets: [OpenShareTests, OpenShareUITests]
