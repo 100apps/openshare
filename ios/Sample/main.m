@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import <OpenShare/OpenShare+System.h>
+#import "OpenShareSample-Swift.h"
 
 @interface OSShareViewController : UIViewController
 @end
@@ -19,10 +19,7 @@
     ]];
 }
 - (void)share:(UIButton *)sender {
-    OSMessage *message = [OSMessage new];
-    message.title = @"OpenShare";
-    message.link = @"https://github.com/100apps/openshare";
-    [OpenShare shareMessage:message fromViewController:self sourceView:sender completion:nil];
+    [OSNextShare shareFrom:self sourceView:sender];
 }
 @end
 

@@ -1,0 +1,18 @@
+[
+  {"name":"unicode text","provider":"system","text":"你好 👋 + & %","iosOutcome":"activityCompleted","androidOutcome":"handedOff"},
+  {"name":"empty text","provider":"system","text":" \n ","error":"invalidContent"},
+  {"name":"unsafe URL","provider":"system","kind":"link","url":"javascript:alert(1)","error":"invalidContent"},
+  {"name":"relative URL","provider":"system","kind":"link","url":"example.com/path","error":"invalidContent"},
+  {"name":"signed link preserved","provider":"system","kind":"link","url":"https://example.com/?a=1%2B2&b=x%26y","title":"你好","summary":"summary","iosOutcome":"activityCompleted","androidOutcome":"handedOff"},
+  {"name":"unknown provider","provider":"missing","text":"hello","error":"unknownProvider"},
+  {"name":"unknown system channel","provider":"system","channel":"timeline","text":"hello","error":"unsupportedChannel"},
+  {"name":"system has no login","provider":"system","auth":true,"scope":"profile","error":"unsupportedOperation"},
+  {"name":"blank scope","provider":"system","auth":true,"scope":" ","error":"invalidContent"},
+  {"name":"telegram requires link","provider":"telegram","text":"hello","error":"unsupportedContent"},
+  {"name":"do not drop link title","provider":"telegram","kind":"link","url":"https://example.com/","title":"title","error":"unsupportedField"},
+  {"name":"telegram URL encoding","provider":"telegram","kind":"link","url":"https://example.com/?a=1%2B2&b=x%26y","iosOutcome":"handedOff","androidOutcome":"handedOff"},
+  {"name":"whatsapp unicode encoding","provider":"whatsapp","text":"你好 + & %\n👋","iosOutcome":"handedOff","androidOutcome":"handedOff"},
+  {"name":"do not drop summary","provider":"whatsapp","kind":"link","url":"https://example.com/","summary":"caption","error":"unsupportedField"},
+  {"name":"telegram has no login here","provider":"telegram","auth":true,"scope":"profile","error":"unsupportedOperation"},
+  {"name":"unknown public channel","provider":"whatsapp","channel":"friends","text":"hello","error":"unsupportedChannel"}
+]

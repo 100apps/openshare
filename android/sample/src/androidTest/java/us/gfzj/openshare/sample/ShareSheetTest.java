@@ -10,8 +10,8 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import us.gfzj.openshare.OpenShare;
-import us.gfzj.openshare.ShareMessage;
+import us.gfzj.openshare.ShareClient;
+import us.gfzj.openshare.SystemShareProvider;
 
 @RunWith(AndroidJUnit4.class)
 public class ShareSheetTest {
@@ -20,9 +20,9 @@ public class ShareSheetTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             String[] resolverPackage = new String[1];
             scenario.onActivity(activity -> {
-                Intent chooser = Intent.createChooser(OpenShare.createSendIntent(ShareMessage.text("你好 OpenShare")), "Share");
+                Intent chooser = Intent.createChooser(new SystemShareProvider().createIntent(ShareClient.Content.text("你好 OpenShare")), "Share");
                 resolverPackage[0] = chooser.resolveActivity(activity.getPackageManager()).getPackageName();
-                assertTrue(OpenShare.share(activity, ShareMessage.text("你好 OpenShare"), "Share"));
+                activity.findViewById(android.R.id.button1).performClick();
             });
             assertTrue("System Sharesheet did not appear", device.wait(Until.hasObject(By.pkg(resolverPackage[0])), 10000));
             device.pressBack();

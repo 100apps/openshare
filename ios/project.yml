@@ -10,12 +10,30 @@ settings:
     GENERATE_INFOPLIST_FILE: YES
     SWIFT_VERSION: '5.0'
 targets:
+  OpenShareCore:
+    type: framework
+    platform: iOS
+    sources: [../next/ios/Core]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareCore
+  OpenShareSystem:
+    type: framework
+    platform: iOS
+    sources: [../next/ios/System]
+    dependencies:
+      - target: OpenShareCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareSystem
   OpenShareSample:
     type: application
     platform: iOS
     sources: [Sample]
     dependencies:
       - target: OpenShare
+      - target: OpenShareSystem
+      - target: OpenShareCore
     info:
       path: Sample/Info.plist
       properties:
@@ -46,8 +64,11 @@ targets:
     sources:
       - path: ../adapters/ios
         headerVisibility: public
+      - path: ../next/ios/WeChat
     dependencies:
       - target: OpenShare
+      - target: OpenShareCore
+      - target: OpenShareSystem
       - framework: ../.build/WechatOpenSDK.xcframework
         embed: false
       - sdk: Security.framework
@@ -62,16 +83,22 @@ targets:
   OpenShareTests:
     type: bundle.unit-test
     platform: iOS
-    sources: [Tests]
+    sources:
+      - path: Tests
+      - path: ../tests/contracts.json
+        buildPhase: resources
     dependencies:
       - target: OpenShareSample
       - target: OpenShare
       - target: OpenShareWeChat
+      - target: OpenShareCore
+      - target: OpenShareSystem
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: us.gfzj.OpenShareTests
         TEST_HOST: '$(BUILT_PRODUCTS_DIR)/OpenShareSample.app/OpenShareSample'
         BUNDLE_LOADER: '$(TEST_HOST)'
+        SWIFT_OBJC_BRIDGING_HEADER: Tests/Tests-Bridging-Header.h
   OpenShareUITests:
     type: bundle.ui-testing
     platform: iOS

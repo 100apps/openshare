@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '15.0'
   s.requires_arc = true
   s.static_framework = true
+  s.swift_version = '5.9'
   s.default_subspecs = 'Core'
 
   s.subspec 'Core' do |core|
@@ -21,5 +22,16 @@ Pod::Spec.new do |s|
     wechat.dependency 'OpenShare/Core'
     wechat.dependency 'WechatOpenSDK-XCFramework', '2.0.9'
     wechat.source_files = 'adapters/ios/*.{h,m}'
+  end
+
+  s.subspec 'Next' do |next_sdk|
+    next_sdk.source_files = 'next/ios/{Core,System}/*.swift'
+    next_sdk.frameworks = 'UIKit'
+  end
+
+  s.subspec 'NextWeChat' do |wechat|
+    wechat.dependency 'OpenShare/Next'
+    wechat.dependency 'WechatOpenSDK-XCFramework', '2.0.9'
+    wechat.source_files = 'next/ios/WeChat/*.swift'
   end
 end

@@ -14,6 +14,12 @@
 
 系统分享的接收方由系统和已安装 App 决定。它不能保证某个 App 出现在列表，也不能替代第三方登录或支付。微信适配器的自动化测试使用真实 SDK 类型、模拟传输；真实登录、支付、Universal Links 和签名配置仍需在你自己的已审核应用中真机验收。详见[兼容性与验证边界](docs/modernization.md)。
 
+## 新版统一接口
+
+已按设计实现极简双端 `ShareClient`：系统分享、Telegram/WhatsApp 公开链接、可选微信分享/授权码登录。强类型请求、能力预检、一次性结果回调；新增平台只需实现 Provider。新核心不依赖厂商 SDK。两端示例已使用新入口。
+
+接入代码、模块选择、取消/超时与验证范围见 **[OpenShare Next 实现说明](docs/next-sdk/implementation.md)**。下面保留旧兼容 API 的说明。
+
 ## iOS
 
 Swift Package Manager 添加本仓库，选择 `OpenShare` product。它不包含微信 SDK。
@@ -95,11 +101,11 @@ bash scripts/ios-test.sh
 
 [GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括使用正式 Xcode 27.2、核对及按需下载 iOS 27.2 正式运行时。实际工具链版本与[验证边界](docs/modernization.md)均有记录。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
 
-## 协议调研与下一版设计（提案）
+## 协议调研与设计
 
 围绕 ShareSDK 与原 OpenShare 的实现，已整理[调研与取舍](docs/research/sharesdk.md)、[协议确认结果](docs/research/protocols.md)、[跨平台 SDK 设计](docs/next-sdk/design.md)及[验证与迁移计划](docs/next-sdk/validation.md)。[来源目录](docs/research/sources.md)记录指定版本、制品哈希和未确认项目。
 
-这些文档定义未来接口，不代表当前已经新增了所有平台的适配器或通过真实登录/发布验收。当前可用 API 仍以上面的接入说明为准。
+完整设计包含后续阶段；本轮已落地的 P1 以[实现说明](docs/next-sdk/implementation.md)为准，不代表所有平台已适配或真实登录/发布验收已通过。
 
 ## 许可
 

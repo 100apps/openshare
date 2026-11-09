@@ -1,6 +1,6 @@
 # OpenShare Next：跨平台 SDK 设计草案
 
-日期：2026-11-09；契约草案 v1，不是产品发布版本号。本文定义下一步实现目标；代码中的 `OpenShare`、`OSWeChat` 和 Java `WeChat` 仍是现有接口。
+日期：2026-11-09；契约草案 v1，不是产品发布版本号。本文保留完整目标契约；P1 的最小运行实现已落地，实际 API、收敛方式与未实现部分见[实现与接入](implementation.md)。`OpenShare`、`OSWeChat` 和 Java `WeChat` 旧入口继续保留。
 
 依据：[ShareSDK 调研](../research/sharesdk.md)、[协议分析](../research/protocols.md)。验收条件见[验证与迁移](validation.md)。
 

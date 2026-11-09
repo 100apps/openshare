@@ -21,11 +21,7 @@ static BOOL testSendAccepted = YES;
 + (BOOL)os_testRegister:(NSString *)appID universalLink:(NSString *)link { return YES; }
 @end
 
-@interface OpenShareTests : XCTestCase
-@end
-@implementation OpenShareTests
-+ (void)setUp {
-    [super setUp];
+static void swapWXTransport(void) {
     method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(isWXAppInstalled)),
                                    class_getClassMethod(WXApi.class, @selector(os_testInstalled)));
     method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(sendReq:completion:)),
@@ -33,13 +29,20 @@ static BOOL testSendAccepted = YES;
     method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(registerApp:universalLink:)),
                                    class_getClassMethod(WXApi.class, @selector(os_testRegister:universalLink:)));
 }
+void OSWXStubBegin(void) { testInstalled = YES; testSendAccepted = YES; sentRequest = nil; swapWXTransport(); }
+void OSWXStubEnd(void) { swapWXTransport(); sentRequest = nil; }
+void OSWXStubSetAccepted(BOOL accepted) { testSendAccepted = accepted; }
+BaseReq *OSWXStubRequest(void) { return sentRequest; }
+
+@interface OpenShareTests : XCTestCase
+@end
+@implementation OpenShareTests
++ (void)setUp {
+    [super setUp];
+    OSWXStubBegin();
+}
 + (void)tearDown {
-    method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(isWXAppInstalled)),
-                                   class_getClassMethod(WXApi.class, @selector(os_testInstalled)));
-    method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(sendReq:completion:)),
-                                   class_getClassMethod(WXApi.class, @selector(os_testSend:completion:)));
-    method_exchangeImplementations(class_getClassMethod(WXApi.class, @selector(registerApp:universalLink:)),
-                                   class_getClassMethod(WXApi.class, @selector(os_testRegister:universalLink:)));
+    OSWXStubEnd();
     [super tearDown];
 }
 - (void)setUp { testInstalled = YES; testSendAccepted = YES; sentRequest = nil; }

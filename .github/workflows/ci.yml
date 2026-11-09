@@ -80,7 +80,9 @@ jobs:
       - name: Generate test project
         run: xcodegen generate --spec ios/project.yml
       - name: Build Swift package without vendor SDKs
-        run: xcodebuild -scheme OpenShare -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+        run: |
+          xcodebuild -scheme OpenShare -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+          xcodebuild -scheme OpenShareNext -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
       - name: Test on iPhone and iPad
         run: bash scripts/ios-test.sh
       - name: Build legacy demo with current SDK
@@ -91,6 +93,8 @@ jobs:
           export XCODE_XCCONFIG_FILE="$PWD/.build/pod-lint.xcconfig"
           pod lib lint OpenShare.podspec --subspec=Core --allow-warnings
           pod lib lint OpenShare.podspec --subspec=WeChat --allow-warnings
+          pod lib lint OpenShare.podspec --subspec=Next --allow-warnings
+          pod lib lint OpenShare.podspec --subspec=NextWeChat --allow-warnings
       - uses: actions/upload-artifact@v7
         if: always()
         with:

@@ -8,6 +8,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     testOptions { unitTests.includeAndroidResources = true }
+    sourceSets.test.resources.srcDir '../../tests'
     lint { abortOnError true; warningsAsErrors true }
 }
 dependencies {

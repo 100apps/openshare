@@ -9,13 +9,18 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Rule;
+import androidx.test.rule.ActivityTestRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.annotation.UiThreadTest;
+import us.gfzj.openshare.ShareClient;
+import android.app.Activity;
 
 @RunWith(AndroidJUnit4.class)
 public class WeChatTest {
+    @Rule public ActivityTestRule<TestActivity> activityRule = new ActivityTestRule<>(TestActivity.class);
     private WeChat wechat;
     private BaseReq sent;
     private boolean installed;
@@ -84,5 +89,30 @@ public class WeChatTest {
         response.state = ((SendAuth.Req) sent).state;
         wechat.onResp(response);
         assertEquals(List.of("invalid_response"), results);
+    }
+
+    @Test @UiThreadTest public void coreProviderRetainsTransportAndReturnsTypedCredentials() {
+        WeChatProvider provider = new WeChatProvider(wechat);
+        ShareClient client = new ShareClient(provider);
+        ShareClient.Request share = ShareClient.Request.share("wechat", "session", ShareClient.Content.text("hello"));
+        assertEquals(ShareClient.Correlation.requestBound, client.prepare(share).capabilities.correlation);
+        Activity activity = activityRule.getActivity(); // Real focused presenter; only the SDK transport is replaced.
+        ShareClient.Operation old = client.execute(share, activity, ignored -> {});
+        old.cancel();
+        try { new ShareClient(provider).execute(share, activity, ignored -> {}); fail("Expected busy"); }
+        catch (ShareClient.Failure error) { assertEquals(ShareClient.Code.busy, error.code); }
+        SendMessageToWX.Resp shared = new SendMessageToWX.Resp(); shared.transaction = sent.transaction;
+        wechat.onResp(shared);
+        assertEquals(ShareClient.Outcome.cancelledLocally, old.result().outcome);
+        ShareClient.Operation auth = client.execute(ShareClient.Request.authorize("wechat", "profile"), activity, ignored -> {});
+        assertNull(auth.result());
+        SendAuth.Resp response = new SendAuth.Resp(); response.state = "wrong"; response.code = "code";
+        wechat.onResp(response); assertNull(auth.result());
+        response.state = ((SendAuth.Req) sent).state; wechat.onResp(response); wechat.onResp(response);
+        assertEquals(ShareClient.Outcome.credentialReceived, auth.result().outcome);
+        assertEquals(ShareClient.Credential.Kind.authorizationCode, auth.result().credential.kind);
+        assertEquals("code", auth.result().credential.value);
+        try { client.prepare(ShareClient.Request.authorize("wechat", "profile", ShareClient.Credential.Kind.accessToken)); fail("Expected unsupported kind"); }
+        catch (ShareClient.Failure error) { assertEquals(ShareClient.Code.unsupportedCredentialKind, error.code); }
     }
 }

@@ -45,7 +45,7 @@ public final class WeChat implements IWXAPIEventHandler {
 
     public void shareLink(String url, String title, String description, int scene, Callback callback) {
         android.net.Uri uri = android.net.Uri.parse(url == null ? "" : url);
-        if (!("https".equals(uri.getScheme()) || "http".equals(uri.getScheme())) || uri.getHost() == null) {
+        if (!("https".equalsIgnoreCase(uri.getScheme()) || "http".equalsIgnoreCase(uri.getScheme())) || uri.getHost() == null) {
             throw new IllegalArgumentException("An HTTP(S) URL is required");
         }
         WXMediaMessage message = new WXMediaMessage(new WXWebpageObject(url));

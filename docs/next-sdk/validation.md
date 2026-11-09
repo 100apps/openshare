@@ -11,7 +11,7 @@
 | 微信 2.0.9 / 6.8.40 | 已检查公开 API；Android 部分序列化和传输校验作静态观察 | 没有用自身 App ID 完成真实登录/分享，没有独立 wire 互通实现 |
 | QQ、微博、抖音等 | 已按[来源目录](../research/sources.md)标明文档/制品/索引证据 | 不是所有平台均已实现 adapter 或通过最新客户端测试 |
 | 当前 OpenShare 基线 | [四组 CI 已通过](https://github.com/100apps/openshare/actions/runs/42510143598) | 不覆盖 Next 契约、ShareSDK 集成或真实账号授权 |
-| Next 契约 | 本轮交付设计、迁移和验收定义 | 没有新增运行时实现；本文场景不是已执行的测试结果 |
+| Next 契约 | P1 已实现 Core、系统分享、公开链接及可选微信 Provider | 实际范围与测试见[实现说明](implementation.md)；下列 36 项仍是完整路线图，不等于全部执行 |
 
 研究中遇到的读取限制也保留在 evidence.json：微信指南的网络访问限制、Mob 隐私正文的 JavaScript 页面、Meta 429 等。没有用其他人的博客或 demo 密钥填补这些空白。
 
@@ -29,7 +29,7 @@
 
 ## 3. 两端必须共用的契约场景
 
-实现时应把下表转为两端共用的场景数据及 native 适配器测试。SDK 传输替身只验证状态机；真机测试另列，结果不能互相替代。
+P1 已增加共享输入及 native 测试，具体覆盖见[实现说明](implementation.md)。下表保留更完整的后续验收要求，应随每项能力逐步落实。SDK 传输替身只验证状态机；真机测试另列，结果不能互相替代。
 
 | ID | 场景 | 验收断言 |
 | --- | --- | --- |
@@ -91,9 +91,9 @@ C18 不是要求测试引擎神奇识别没有标识的旧响应。它要求能�
 
 ## 5. CI 与构建策略
 
-现有四组 CI 继续作为系统分享和现有微信适配器的基线。后续实现 Core 时再增加契约测试，不把本轮文档检查包装成新 SDK 运行测试。
+四组 CI 同时验证新旧接口，包括共享输入、Core 生命周期与官方 SDK 类型的替身传输测试。手机/平板的真实系统面板 UI 已切换新 client；这不代表社交客户端的真实登录/发布通过。
 
-实现阶段建议：
+持续验证要求：
 
 1. Core 与纯链接构造的单测不依赖真实凭据或已安装社交 App；iOS/Android 使用一致的场景数据。
 2. 系统面板在手机/平板模拟器上做真实 UI 检查；Android 增加不同 API 级别的 chooser 观察分支、URI 授权及 16 KB 页兼容。
@@ -110,7 +110,7 @@ C18 不是要求测试引擎神奇识别没有标识的旧响应。它要求能�
 | --- | --- | --- |
 | OSMessage + System category | 明确的 ShareContent 与 SystemShareProvider | 旧多空字段先校验，无法判断时拒绝，不猜类型 |
 | Android ShareMessage/OpenShare | Core 请求、SystemShareProvider | 保留原 boolean 启动结果的旧接口，新接口返回准确结果 |
-| OSWeChat / Java WeChat | 官方 WeChat provider 的第一批实现基础 | 补充 app 级所有权、能力及关联保证；不声称已有新状态机 |
+| OSWeChat / Java WeChat | 官方 WeChat provider 的第一批实现基础 | 新 Provider 已补充 app 级所有权、能力及关联保证；旧 API 继续保留 |
 | 原微信/QQ/微博/人人 category | 显式 Legacy 包与迁移说明 | 不自动作为新 provider 的失败回退，不把旧回调升级为可信凭证 |
 | 旧字符串/布尔成功回调 | 旧兼容层保留原契约，新接口使用结构化结果 | 无法恢复的原因标为 unknown/legacy；不把旧 cancelled 一概解释成用户取消 |
 | 现有 PayReq / 支付宝接口 | 独立支付模块或保留为 Legacy | 不进入 ShareProvider/AuthProvider 的通用扩展逃生口 |
