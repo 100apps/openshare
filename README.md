@@ -95,6 +95,12 @@ bash scripts/ios-test.sh
 
 [GitHub Actions](https://github.com/100apps/openshare/actions/workflows/ci.yml) 执行 Android 单元测试、lint、AAR/APK 构建和最新稳定模拟器测试；三组 macOS runner 执行 Swift Package 构建、iPhone / iPad XCTest、旧 demo 构建及 CocoaPods 本地 lint，包括使用正式 Xcode 27.2、核对及按需下载 iOS 27.2 正式运行时。实际工具链版本与[验证边界](docs/modernization.md)均有记录。测试报告、构建产物与 `.xcresult` 作为 CI artifacts 保存。
 
+## 协议调研与下一版设计（提案）
+
+围绕 ShareSDK 与原 OpenShare 的实现，已整理[调研与取舍](docs/research/sharesdk.md)、[协议确认结果](docs/research/protocols.md)、[跨平台 SDK 设计](docs/next-sdk/design.md)及[验证与迁移计划](docs/next-sdk/validation.md)。[来源目录](docs/research/sources.md)记录指定版本、制品哈希和未确认项目。
+
+这些文档定义未来接口，不代表当前已经新增了所有平台的适配器或通过真实登录/发布验收。当前可用 API 仍以上面的接入说明为准。
+
 ## 许可
 
 OpenShare 保持 [GPLv3](LICENSE)。可选官方 SDK 按各厂商自己的许可提供，不随本仓库提交二进制文件。

@@ -2,7 +2,7 @@
 
 ## 设计
 
-保留原来的“小消息模型 + 简单调用”思路，新增原生 Android 实现，不引入跨平台 UI 框架。默认分享走系统 API，不需要各厂商 SDK。微信需要 Universal Links、应用签名校验和厂商协议维护，使用可选官方 SDK；不继续把 2015 年剪贴板协议伪装成新系统兼容实现。
+保留原来的“小消息模型 + 简单调用”思路，新增原生 Android 实现，不引入跨平台 UI 框架。默认分享走系统 API，不需要各厂商 SDK。当前微信路径使用可选官方 SDK，处理 Universal Links、应用签名校验和持续变化的平台要求。公开协议与独立协议适配器的进一步取舍见[协议调研](research/protocols.md)，下一版契约见[设计提案](next-sdk/design.md)。
 
 原来的 iOS categories 继续保留，CocoaPods 默认 Core 及 Swift Package 都包含它们，以减少源代码迁移成本。系统分享是新增入口，不会把现有定向分享调用静默改成系统分享。新版最低版本为 iOS 15 / Android API 23。
 

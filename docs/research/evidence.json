@@ -1,0 +1,385 @@
+{
+  "research_date": "2026-11-09",
+  "recorded_at_utc": "2026-11-09T01:33:42.407375+00:00",
+  "baseline_commit": "5ed0cf4978f09bcb7f4dd9671b24e7becbef3902",
+  "scope": "Static inspection and official documentation research; no third-party login, publishing or SDK execution",
+  "repository_snapshots": {
+    "MobClub/ShareSDK-for-iOS": "b81262ceefa0e8394f4f06d6a4f3215fa42c319d",
+    "MobClub/ShareSDK-for-Android": "3eabd65ca4b5b088431657ee8ad14c42c8ff1f2f",
+    "sinaweibosdk/weibo_ios_sdk": "632f6d5672fdc89091ec9ea88321efb5183fbc67",
+    "sinaweibosdk/weibo_android_sdk": "14fa654d2ae9d532e1357723236babf2aa71f88f"
+  },
+  "retrieved_documents": [
+    {
+      "id": "ios-podspec",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-iOS/b81262ceefa0e8394f4f06d6a4f3215fa42c319d/mob_sharesdk.podspec",
+      "http_status": 200,
+      "sha256": "e634c5d1cce7eb071359624e4265a121c8b336dedc29a9eedd0d044a9ba4dbde",
+      "bytes": 26052,
+      "interpretation": "Historical pinned repository snapshot; not the current 4.4.51 distribution"
+    },
+    {
+      "id": "ios-api",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-iOS/b81262ceefa0e8394f4f06d6a4f3215fa42c319d/SDK/ShareSDK/ShareSDK.framework/Headers/ShareSDK.h",
+      "http_status": 200,
+      "sha256": "d18388f6e22688fdbdbf26b0d0af81a03e9f9ac0c6792dcff99973bad4d39a21",
+      "bytes": 4406,
+      "interpretation": "Historical pinned repository snapshot; not the current 4.4.51 distribution"
+    },
+    {
+      "id": "ios-register",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-iOS/b81262ceefa0e8394f4f06d6a4f3215fa42c319d/SDK/ShareSDK/ShareSDK.framework/Headers/SSDKRegister.h",
+      "http_status": 200,
+      "sha256": "b4ba4e769e5c7e2ee014957d0a4e6df9126c1c57c1b317cf9e1ad9a424c35354",
+      "bytes": 10721,
+      "interpretation": "Historical pinned repository snapshot; not the current 4.4.51 distribution"
+    },
+    {
+      "id": "ios-wechat-connector",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-iOS/b81262ceefa0e8394f4f06d6a4f3215fa42c319d/SDK/ShareSDK/Support/PlatformConnector/WechatConnector.framework/Headers/WeChatConnector.h",
+      "http_status": 200,
+      "sha256": "f91b9696c2da9055e9cc0a25d8e31a3494bff0641fe8d50f40945b94d8512037",
+      "bytes": 3406,
+      "interpretation": "Historical pinned repository snapshot; not the current 4.4.51 distribution"
+    },
+    {
+      "id": "android-config",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-Android/3eabd65ca4b5b088431657ee8ad14c42c8ff1f2f/SampleFresh/MobSDK.gradle",
+      "http_status": 200,
+      "sha256": "2aea77623fcc953e902119424fa3087adfe0d1c7cbde16d1995fedf34b6afd56",
+      "bytes": 17477
+    },
+    {
+      "id": "android-gradle",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-Android/3eabd65ca4b5b088431657ee8ad14c42c8ff1f2f/SampleFresh/app/build.gradle",
+      "http_status": 200,
+      "sha256": "4c9e96bac17c3b990b84b32473511c8c0e7efb8248b8eaffac5eecf836516ff6",
+      "bytes": 3339
+    },
+    {
+      "id": "mob-latest-pod",
+      "url": "https://trunk.cocoapods.org/api/v1/pods/mob_sharesdk/specs/latest",
+      "http_status": 200,
+      "sha256": "af51a2ccc6f26b9b7d12d9883150ce81a5fb5988e8b8f3ccad31dc4842108fa3",
+      "bytes": 28557,
+      "interpretation": "Channel lookup only; versioned spec recorded separately"
+    },
+    {
+      "id": "apple-web-auth",
+      "url": "https://developer.apple.com/tutorials/data/documentation/authenticationservices/aswebauthenticationsession.md",
+      "final_url": "https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession.md",
+      "http_status": 200,
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 6391,
+      "sha256": "91d5174c35a114f517db31b1c375ddb3415d17bbdf97aca89377479aa45f8ef7",
+      "interpretation": "Official Markdown body read"
+    },
+    {
+      "id": "apple-verify-user",
+      "url": "https://developer.apple.com/tutorials/data/documentation/signinwithapple/verifying-a-user.md",
+      "final_url": "https://developer.apple.com/documentation/signinwithapple/verifying-a-user.md",
+      "http_status": 200,
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 4204,
+      "sha256": "fa1b49562efc72b5ce40f439fe386678bf8e1d2b89e4115ea2b89d4e84416cdd",
+      "interpretation": "Official Markdown body read"
+    },
+    {
+      "id": "apple-activity-callback",
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiactivityviewcontroller/completionwithitemshandler-swift.typealias.md",
+      "final_url": "https://developer.apple.com/documentation/uikit/uiactivityviewcontroller/completionwithitemshandler-swift.typealias.md",
+      "http_status": 200,
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 2486,
+      "sha256": "5f297584669848803b0e559fb9c0ef7d8d35ccc4f5b2f1163297049c2571eca0",
+      "interpretation": "Official Markdown body read"
+    },
+    {
+      "id": "apple-universal-links",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcode/supporting-universal-links-in-your-app.md",
+      "final_url": "https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app.md",
+      "http_status": 200,
+      "content_type": "text/markdown; charset=utf-8",
+      "bytes": 7681,
+      "sha256": "48f9c602a358d8e03176a055341c8277cea87b05888a724b7b0fe2c210687aff",
+      "interpretation": "Official Markdown body read"
+    },
+    {
+      "id": "wechat-login-guide",
+      "url": "https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html",
+      "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+      "interpretation": "Access blocked; not treated as confirmed current documentation"
+    },
+    {
+      "id": "xhs-overview",
+      "url": "https://agora.xiaohongshu.com/doc",
+      "final_url": "https://agora.xiaohongshu.com/doc",
+      "http_status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 9027,
+      "sha256": "b2ac2cb6edc21e7a01201bc2cfd5861842452ee33a28dd7ce74d6d7ab895e54e",
+      "interpretation": "HTTP 200 is a JavaScript shell; substantive statements use official search-index evidence"
+    },
+    {
+      "id": "mob-versioned-spec",
+      "url": "https://trunk.cocoapods.org/api/v1/pods/mob_sharesdk/specs/4.4.51",
+      "final_url": "https://raw.githubusercontent.com/CocoaPods/Specs/47f9abbf6972bcf7927a92b8a1d44db9fb7209f0/Specs/8/5/c/mob_sharesdk/4.4.51/mob_sharesdk.podspec.json",
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 28557,
+      "sha256": "af51a2ccc6f26b9b7d12d9883150ce81a5fb5988e8b8f3ccad31dc4842108fa3"
+    },
+    {
+      "id": "weibo-ios-header",
+      "url": "https://raw.githubusercontent.com/sinaweibosdk/weibo_ios_sdk/632f6d5672fdc89091ec9ea88321efb5183fbc67/libWeiboSDK_xc/WeiboSDK.xcframework/ios-arm64/WeiboSDK.framework/Headers/WeiboSDK.h",
+      "http_status": 200,
+      "sha256": "baab182b7725c5a273173d1f593c9ad2fc43aa04f781aca1a1256d1c5f8367fe",
+      "bytes": 21773
+    },
+    {
+      "id": "weibo-android-readme",
+      "url": "https://raw.githubusercontent.com/sinaweibosdk/weibo_android_sdk/14fa654d2ae9d532e1357723236babf2aa71f88f/README.md",
+      "http_status": 200,
+      "sha256": "512cc63e9265b108e90595de6adafdb1210c8305acbfdfc85bb7182721f31059",
+      "bytes": 2865
+    },
+    {
+      "id": "android-root-gradle",
+      "url": "https://raw.githubusercontent.com/MobClub/ShareSDK-for-Android/3eabd65ca4b5b088431657ee8ad14c42c8ff1f2f/SampleFresh/build.gradle",
+      "http_status": 200,
+      "bytes": 2594,
+      "sha256": "83224eeff10035b158dfa0d3abd4954e67f283b1f498d179d2a575073eb9bb4c"
+    },
+    {
+      "id": "mob-sdk-core-metadata",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK/maven-metadata.xml",
+      "http_status": 200,
+      "bytes": 863,
+      "sha256": "451ebfc390242029e2495426f551d4f4081bbbfeb9f2925a92c43382d661be4b"
+    },
+    {
+      "id": "mob-sdk-wechat-metadata",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat/maven-metadata.xml",
+      "http_status": 200,
+      "bytes": 870,
+      "sha256": "9e81d80c950c92554fc6d5423eeb46689a136bfef44db17d829f439ff723b999"
+    },
+    {
+      "id": "mob-sdk-core-metadata-lower",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/sharesdk/maven-metadata.xml",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "mob-sdk-plugin-metadata",
+      "url": "https://mvn.mob.com/android/com/mob/sdk/MobSDK/maven-metadata.xml",
+      "http_status": 200,
+      "bytes": 1056,
+      "sha256": "ea942e8cdacc215fe694c12fd5767c51772f4e30c0243b1a8a8c36d56caa16d5"
+    },
+    {
+      "id": "ShareSDK-pom",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK/3.10.36/ShareSDK-3.10.36.pom",
+      "http_status": 200,
+      "bytes": 391,
+      "sha256": "9ccd8e0f25f73a8dc1b0acdb08af7ac6e23f64b949376b92a9918fcdb3dc874b"
+    },
+    {
+      "id": "ShareSDK-Wechat-pom",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat/3.10.36/ShareSDK-Wechat-3.10.36.pom",
+      "http_status": 200,
+      "bytes": 398,
+      "sha256": "44500d0de3bd48ec19b44c31af1a355c6375b149b497caa7c62ddea98601a7bc"
+    },
+    {
+      "id": "ShareSDK-QQ-pom",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-QQ/3.10.36/ShareSDK-QQ-3.10.36.pom",
+      "http_status": 200,
+      "bytes": 394,
+      "sha256": "939b7962e714d4b6572fce78b46a7c3b2821dce38fd0d6aa581d76fcfb76a468"
+    },
+    {
+      "id": "ShareSDK-SinaWeibo-pom",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-SinaWeibo/3.10.36/ShareSDK-SinaWeibo-3.10.36.pom",
+      "http_status": 200,
+      "bytes": 401,
+      "sha256": "e53dcacd10177d002d4a920e11dbd3f87f450bc57365b3ad9318c2596e504f2f"
+    },
+    {
+      "id": "ShareSDK-jar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK/3.10.36/ShareSDK-3.10.36.jar",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "ShareSDK-Wechat-jar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat/3.10.36/ShareSDK-Wechat-3.10.36.jar",
+      "http_status": 200,
+      "bytes": 6802,
+      "sha256": "00f0231b2a405324318d46d1fec4ef22857633abdfccfe062316b080c3de4020",
+      "class_count": 2
+    },
+    {
+      "id": "ShareSDK-QQ-jar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-QQ/3.10.36/ShareSDK-QQ-3.10.36.jar",
+      "http_status": 200,
+      "bytes": 47789,
+      "sha256": "018701dd2feb5477f6b13ff20e1c874d98d5d4e69dd4b4e5c209a6fee8ee422b",
+      "class_count": 27
+    },
+    {
+      "id": "ShareSDK-SinaWeibo-jar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-SinaWeibo/3.10.36/ShareSDK-SinaWeibo-3.10.36.jar",
+      "http_status": 200,
+      "bytes": 82291,
+      "sha256": "e40dc489bc0e46967cc897590450456da810b8dc6cfa56ba76f54c54cdd5dcc8",
+      "class_count": 48
+    },
+    {
+      "id": "core-aar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK/3.10.36/ShareSDK-3.10.36.aar",
+      "http_status": 200,
+      "bytes": 369793,
+      "sha256": "e6d963876c24d2b649b147d4ae08142565a517453a4d228277bc4a798247c3e7",
+      "bytecode_entry": "libs/ShareSDK-3.10.36.jar",
+      "inspection": "Inspected embedded JAR; no runtime execution"
+    },
+    {
+      "id": "wechat-core-jar",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat-Core/3.10.36/ShareSDK-Wechat-Core-3.10.36.jar",
+      "http_status": 200,
+      "bytes": 69834,
+      "sha256": "5ac12c4b21d56eef4fe7ffec177ebbd024877e7505972548577d1e42658abd79",
+      "class_count": 50
+    },
+    {
+      "id": "wechat-core-pom",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat-Core/3.10.36/ShareSDK-Wechat-Core-3.10.36.pom",
+      "http_status": 200,
+      "bytes": 403,
+      "sha256": "7fe595fd1875e1434e629a80c080542c138b93248ab5a9da7feee30d662cb5b5"
+    },
+    {
+      "id": "wechat-core-metadata",
+      "url": "https://mvn.mob.com/android/cn/sharesdk/ShareSDK-Wechat-Core/maven-metadata.xml",
+      "http_status": 200,
+      "bytes": 875,
+      "sha256": "b804dafc7b516b96aa2f41a2ab7cdbf46376cb1d15996f05449b4e9b36952814"
+    }
+  ],
+  "sharesdk_ios_distribution": {
+    "version": "4.4.51",
+    "channel": "CocoaPods trunk",
+    "url": "https://sdk-dev-ios.oss-cn-hangzhou.aliyuncs.com/files/download/sharesdk/ShareSDK_For_iOS_v4.4.51.zip",
+    "archive_bytes": 73859066,
+    "archive_sha256": null,
+    "inspection": "HTTP range reads of ZIP directory and selected headers; not a complete ZIP download",
+    "last_modified_observed": "Thu, 15 Oct 2026 10:54:24 GMT",
+    "archive_entry_count": 2346,
+    "selected_headers": [
+      {
+        "path": "ShareSDK/ShareSDK.xcframework/ios-arm64_x86_64-simulator/ShareSDK.framework/Headers/SSDKRegister.h",
+        "bytes": 11428,
+        "sha256": "4a633afcf6eb453113d29b46f8799d8ee0df67f04896c42ea164d7bf24953323",
+        "crc32": "2a730ff2"
+      },
+      {
+        "path": "ShareSDK/ShareSDK.xcframework/ios-arm64_x86_64-simulator/ShareSDK.framework/Headers/ShareSDK.h",
+        "bytes": 4444,
+        "sha256": "cdbc4d52f11b667fc4a359a37744e15050c1c6c901fd9ae2f5df4f3444046b13",
+        "crc32": "8e21f969"
+      },
+      {
+        "path": "ShareSDK/Support/PlatformConnector/WechatConnector.xcframework/ios-arm64_x86_64-simulator/WechatConnector.framework/Headers/WeChatConnector.h",
+        "bytes": 3406,
+        "sha256": "f91b9696c2da9055e9cc0a25d8e31a3494bff0641fe8d50f40945b94d8512037",
+        "crc32": "aadb62a4"
+      }
+    ],
+    "limits": "Public API and packaging evidence only; Lite runtime behavior and final application size not tested"
+  },
+  "wechat_artifacts": [
+    {
+      "platform": "ios",
+      "version": "2.0.9",
+      "url": "https://dldir1.qq.com/WechatWebDev/opensdk/XCFramework/OpenSDK2.0.9.zip",
+      "bytes": 4988012,
+      "sha256": "ebbdd935f840bedabe1c39ad6149356b37764645ff939ce0160a438520545697",
+      "inspection": "Downloaded full ZIP, verified pinned SHA-256; read WXApi.h and WXApiObject.h"
+    },
+    {
+      "platform": "android",
+      "version": "6.8.40",
+      "url": "https://repo.maven.apache.org/maven2/com/tencent/mm/opensdk/wechat-sdk-android/6.8.40/wechat-sdk-android-6.8.40.aar",
+      "bytes": 172005,
+      "sha256": "c3c3215f2bc7f6aad0454541f9bdd91878cdb15b64d35e194a6c9240000c5d48",
+      "inspection": "Inspected cached official AAR; javap of BaseReq, SendAuth.Req/Resp, SendMessageToWX.Req, WXTextObject, WXWebpageObject and BaseWXApiImplV10",
+      "limits": "Serialization and validation entry observations are not a complete supported wire-protocol contract"
+    }
+  ],
+  "not_verified": [
+    "ShareSDK runtime and network behavior",
+    "ShareSDK Lite feature equivalence",
+    "Actual social-app login or publishing",
+    "Complete current iOS vendor IPC payloads",
+    "Independent private-protocol interoperability",
+    "New OpenShare Next runtime implementation",
+    "Complete ShareSDK Android plugin-resolved runtime dependency graph and dynamic paths"
+  ],
+  "sharesdk_android_distribution": {
+    "channel": "Official Mob Maven HTTPS repository",
+    "version_inspected": "3.10.36",
+    "metadata": {
+      "Core": {
+        "release": "3.10.36",
+        "last_updated": "20260928165545"
+      },
+      "WeChat": {
+        "release": "3.10.36",
+        "last_updated": "20260928165553"
+      },
+      "WeChat-Core": {
+        "release": "3.10.36",
+        "last_updated": "20260928165553"
+      }
+    },
+    "modules": [
+      {
+        "module": "Core",
+        "bytes": 369793,
+        "sha256": "e6d963876c24d2b649b147d4ae08142565a517453a4d228277bc4a798247c3e7"
+      },
+      {
+        "module": "WeChat",
+        "bytes": 6802,
+        "sha256": "00f0231b2a405324318d46d1fec4ef22857633abdfccfe062316b080c3de4020"
+      },
+      {
+        "module": "WeChat-Core",
+        "bytes": 69834,
+        "sha256": "5ac12c4b21d56eef4fe7ffec177ebbd024877e7505972548577d1e42658abd79"
+      },
+      {
+        "module": "QQ",
+        "bytes": 47789,
+        "sha256": "018701dd2feb5477f6b13ff20e1c874d98d5d4e69dd4b4e5c209a6fee8ee422b"
+      },
+      {
+        "module": "SinaWeibo",
+        "bytes": 82291,
+        "sha256": "e40dc489bc0e46967cc897590450456da810b8dc6cfa56ba76f54c54cdd5dcc8"
+      }
+    ],
+    "inspection": "Class-list and javap inspection of supplied models, Intent/Bundle serialization, routing and callback parsing; no SDK execution",
+    "limits": [
+      "Maven POMs do not describe the complete runtime graph",
+      "Core bytecode is embedded under libs in the AAR",
+      "Wechat-Core includes an independent IPC implementation; runtime interoperability is not tested",
+      "No assertion that static packaging proves zero runtime dependencies"
+    ]
+  },
+  "inspection_tools": [
+    "Python urllib and zipfile (CRC-checked selective HTTP Range extraction)",
+    "JDK 21 javap -c -p (static analysis only)",
+    "GitHub API pinned commit trees",
+    "Official documentation text or clearly marked official search index"
+  ]
+}
