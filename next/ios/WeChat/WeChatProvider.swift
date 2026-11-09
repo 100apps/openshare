@@ -69,7 +69,8 @@ import OpenShareSystem
             case .link(let url, let title, let summary):
                 let page = WXWebpageObject(); page.webpageUrl = url.absoluteString
                 let message = WXMediaMessage(); message.mediaObject = page
-                message.title = title; message.description = summary
+                if let title { message.title = title }
+                if let summary { message.description = summary }
                 share.message = message
             default: operation.fail(.unsupportedContent); return
             }
