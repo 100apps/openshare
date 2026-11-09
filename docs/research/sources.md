@@ -138,4 +138,4 @@ podspec 指定的[官方分发 ZIP](https://sdk-dev-ios.oss-cn-hangzhou.aliyuncs
 
 ### C01
 
-[上一轮完整 Mobile CI](https://github.com/100apps/openshare/actions/runs/42510143598)。只证明基线原生系统分享、现有微信适配器的编译/模拟传输测试及既有集成方式。没有验证 ShareSDK 的产品宣传、真实社交 App 登录发布，或本轮尚未实现的新 SDK 设计。
+[上一轮完整 Mobile CI](https://github.com/100apps/openshare/actions/runs/42510143598)。只证明基线原生系统分享、现有微信适配器的编译/模拟传输测试及既有集成方式。没有验证 ShareSDK 的产品宣传、真实社交 App 登录发布，或后续新增的 Next 实现；新实现的范围与独立验证见[实现说明](../next-sdk/implementation.md)。

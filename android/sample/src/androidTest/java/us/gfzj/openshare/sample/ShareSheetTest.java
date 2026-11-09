@@ -22,8 +22,11 @@ public class ShareSheetTest {
             scenario.onActivity(activity -> {
                 Intent chooser = Intent.createChooser(new SystemShareProvider().createIntent(ShareClient.Content.text("你好 OpenShare")), "Share");
                 resolverPackage[0] = chooser.resolveActivity(activity.getPackageManager()).getPackageName();
-                activity.findViewById(android.R.id.button1).performClick();
             });
+            device.waitForIdle();
+            androidx.test.uiautomator.UiObject2 button = device.wait(Until.findObject(By.res("android", "button1")), 10000);
+            assertNotNull("Visible sample share button", button);
+            button.click();
             assertTrue("System Sharesheet did not appear", device.wait(Until.hasObject(By.pkg(resolverPackage[0])), 10000));
             device.pressBack();
         }

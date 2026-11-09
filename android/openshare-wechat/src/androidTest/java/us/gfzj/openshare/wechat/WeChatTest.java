@@ -9,6 +9,10 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
+import androidx.test.platform.app.InstrumentationRegistry;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import android.view.ViewTreeObserver;
 import org.junit.Rule;
 import androidx.test.rule.ActivityTestRule;
 import org.junit.Test;
@@ -27,7 +31,18 @@ public class WeChatTest {
     private boolean sendAccepted;
     private List<String> results;
 
-    @Before public void setup() {
+    @Before public void setup() throws InterruptedException {
+        CountDownLatch focused = new CountDownLatch(1);
+        ViewTreeObserver.OnWindowFocusChangeListener listener = hasFocus -> { if (hasFocus) focused.countDown(); };
+        android.app.Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation.runOnMainSync(() -> {
+            Activity activity = activityRule.getActivity();
+            activity.getWindow().getDecorView().getViewTreeObserver().addOnWindowFocusChangeListener(listener);
+            if (activity.hasWindowFocus()) focused.countDown();
+        });
+        try { assertTrue("Presenter must have window focus", focused.await(10, TimeUnit.SECONDS)); }
+        finally { instrumentation.runOnMainSync(() -> activityRule.getActivity().getWindow().getDecorView()
+                .getViewTreeObserver().removeOnWindowFocusChangeListener(listener)); }
         installed = true;
         sendAccepted = true;
         results = new ArrayList<>();

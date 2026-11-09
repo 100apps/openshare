@@ -1,6 +1,6 @@
 # ShareSDK 调研与 OpenShare 的取舍
 
-日期：2026-11-09。状态：调研结论与下一版设计建议；新接口尚未实现。
+日期：2026-11-09。状态：调研结论与下一版设计依据；后续已按 P1 落地最小新接口，见[实现说明](../next-sdk/implementation.md)。本报告的制品观察和证据边界不因此扩大。
 
 阅读顺序：[协议分析](protocols.md) → [新 SDK 设计](../next-sdk/design.md) → [验证与迁移](../next-sdk/validation.md)。所有外部事实的出处及读取限制见[来源目录](sources.md)。
 
